@@ -1,4 +1,4 @@
-# Étude d'Opportunité : PulsePath Engine1 
+# Étude d'Opportunité : PulsePath Engine
 
 # 1. Résumé Exécutif
 L'industrie des applications de fitness est saturée de trackers de calories, mais la plupart échouent à maintenir l'engagement utilisateur sur le long terme car elles manquent de clarté prédictive. L'utilisateur sait ce qu'il a mangé aujourd'hui, mais il ne sait pas précisément quel impact cela a sur sa date de réussite. PulsePath Engine comble cette lacune en transformant le journal de bord en un moteur de calcul de vélocité en temps réel.
