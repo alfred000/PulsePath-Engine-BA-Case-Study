@@ -1,29 +1,31 @@
-
 # 📄 Description du Processus (To-Be) : PulsePath Engine
 
-## 1. Présentation du Flux Métier
-Ce document modélise le processus cible (**To-Be**) du moteur PulsePath. L'objectif est de montrer comment la donnée brute saisie par l'utilisateur est transformée en insights stratégiques et en mise à jour de trajectoire.
-
----
+## 1. Présentation du Nouveau Flux Métier
+Le processus impose un onboarding analytique strict pour éliminer l'incertitude utilisateur et garantir la qualité de la planification initiale.
 
 ## 2. Diagramme de Flux (Syntaxe Mermaid)
 
 ```mermaid
 graph TD
-    A[Utilisateur : Saisie des Logs quotidiens] --> B{Données Complètes ?}
-    B -- NON --> C[Alerte : Saisie incomplète]
-    C --> A
-    B -- OUI --> D[Calcul du Score d'Intégrité]
-    D --> E[Calcul du TDEE Dynamique]
-    E --> F[Calcul de la Balance Énergétique Net]
-    F --> G[Analyse des Macros & Jeûne]
-    G --> H{Anomalie Détectée ?}
-    H -- OUI --> I[Génération d'un Coach Insight]
-    H -- NON --> J[Calcul de la Nouvelle Vélocité]
-    I --> J
-    J --> K[Mise à jour de la Date d'Échéance]
-    K --> L[Affichage du Dashboard mis à jour]
+    %% ÉTAPE 1: ONBOARDING & DIAGNOSTIC
+    Start([Début : Inscription Utilisateur]) --> A[Saisie Profil : Genre, Âge, Taille, Poids Actuel]
+    A --> B[Calculs Profil : IMC, IMG, Plage de Poids Bien-être]
+    B --> C[Calcul du TDEE de Maintenance initial]
+    
+    %% ÉTAPE 2: PLANIFICATION S.M.A.R.T
+    C --> D[Sélection Objectif : Perte, Maintien, Prise de Masse]
+    D --> E[Calcul Automatique du Budget Calorique Ciblé & Ratio Macros]
+    
+    %% ÉTAPE 3: JOURNALISATION QUOTIDIENNE (Isolée pour futures API)
+    E --> F[Déclenchement Quotidien : Saisie du Journal Log]
+    F --> G[Traitement Log : Poids, Calories, Pas, Sommeil, Macros, Jeûne]
+    G --> H[Vérification du Score d'Intégrité de la donnée]
+    H --> I[Calcul du TDEE Dynamique via le volume de pas]
+    I --> J[Moteur de Vélocité : Ajustement de la Date d'Échéance Estimée]
+    J --> K[Génération des Coach Insights]
+    K --> F
 ```
+
 
 ---
 
