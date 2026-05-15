@@ -1,18 +1,17 @@
-# Étude d'Opportunité : PulsePath Engine
+# 📄 Étude d'Opportunité : PulsePath Engine (Version Évoluée)
 
-# 1. Résumé Exécutif
-L'industrie des applications de fitness est saturée de trackers de calories, mais la plupart échouent à maintenir l'engagement utilisateur sur le long terme car elles manquent de clarté prédictive. L'utilisateur sait ce qu'il a mangé aujourd'hui, mais il ne sait pas précisément quel impact cela a sur sa date de réussite. PulsePath Engine comble cette lacune en transformant le journal de bord en un moteur de calcul de vélocité en temps réel.
+## 1. Résumé Exécutif
+L'industrie des applications de fitness échoue à maintenir l'engagement utilisateur car elle propose un suivi passif et déconnecté de la réalité biologique. L'utilisateur enregistre des données sans comprendre ses métriques de maintenance ni l'interdépendance de ses facteurs de santé. **PulsePath Engine** révolutionne cette approche en instaurant un parcours en 3 étapes : Diagnostic de départ $\rightarrow$ Planification d'Objectifs S.M.A.R.T $\rightarrow$ Suivi prédictif via Journal Quotidien (Source Unique de Vérité).
 
-# 2. Analyse du Problème (Pain Points)
-* Démotivation par l'incertitude : Les utilisateurs abandonnent car ils ne voient pas de résultats immédiats et n'ont aucune visibilité sur leur date d'arrivée réelle.
-* Complexité des variables : Le poids fluctue (eau, muscle), ce qui rend l'interprétation des données brute difficile sans lissage mathématique.
-* Manque de contexte : Les applications classiques ne font pas le lien entre le sommeil, le jeûne et la discipline alimentaire.
+## 2. Analyse du Problème (Pain Points)
+*   **Objectifs irréalistes (Non-SMART)** : Les utilisateurs fixent des poids cibles arbitraires sans connaître leur plage de poids bien-être ni leur métabolisme de maintenance.
+*   **Friction de saisie manuelle** : Les applications actuelles exigent trop d'efforts manuels. Bien que le MVP utilise un modèle déclaratif, l'architecture doit nativement anticiper l'intégration d'API (Apple Health, Garmin, balances connectées).
+*   **Manque de granularité métabolique** : L'Indice de Masse Corporelle (IMC) seul est insuffisant ; il doit être croisé avec l'Indice de Masse Grasse (IMG) pour éviter les erreurs d'interprétation (ex: profils athlétiques).
 
-# 3. Objectifs Stratégiques
-L'objectif est de concevoir un système qui :
-1. Réduit l'abandon en offrant une date d'échéance dynamique et réaliste.
-2. Éduque l'utilisateur sur l'importance des protéines et du sommeil via des insights automatisés.
-3. Fiabilise la donnée via un score d'intégrité (gamification).
+## 3. Objectifs Stratégiques (S.M.A.R.T)
+*   **Spécifique & Mesurable** : Définir une plage de poids bien-être stricte (IMC entre 18.5 et 25) et un ratio de macro-nutriments adapté à l'objectif choisi.
+*   **Atteignable & Réaliste** : Brider les déficits caloriques à un maximum de 1% du poids de corps par semaine.
+*   **Temporellement défini** : Recalculer dynamiquement l'échéance par un moteur de vélocité basé sur une moyenne glissante de 7 jours.
 
 # 4. Analyse des Parties Prenantes (Stakeholders)
 * Utilisateurs Finaux : Personnes souhaitant perdre du gras tout en préservant leur masse musculaire.
