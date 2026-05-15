@@ -34,8 +34,19 @@ Ce glossaire définit les concepts clés et les indicateurs utilisés dans le pr
 *   **Moyenne Glissante (SMA - 7 jours)** : Méthode de calcul utilisée pour lisser les fluctuations quotidiennes (poids, eau) et dégager une tendance réelle.
 
 ---
+## 5. Métriques Biométriques Ajoutées
+*   **IMG (Indice de Masse Grasse)** : Estimation de la proportion de tissu adipeux dans le corps, calculée via la formule de Deurenberg. Elle catégorise l'utilisateur (Normal, Trop bas, Excès de masse grasse).
+*   **Plage de Poids Bien-être** : Intervalle de poids médicalement sain, calculé sur une base d'IMC allant de 18.5 à 24.9.
+*   **Calories de Maintenance** : Énergie nécessaire pour maintenir le poids actuel sans variation, équivalente au TDEE initial de l'utilisateur.
 
-## 5. Acronymes utilisés
+## 6. Dictionnaire des Macro-nutriments
+*   **Protéines (1g = 4 kcal)** : Macro-nutriment prioritaire pour la protection de la masse maigre. Fixé à 30% du budget énergétique en phase de perte de gras.
+*   **Glucides (1g = 4 kcal)** : Source d'énergie principale, ajustée de manière flexible selon le niveau d'activité et l'objectif.
+*   **Lipides (1g = 9 kcal)** : Acides gras essentiels à la régulation hormonale. Maintenus à un seuil stable de 25% à 30% des calories totales.
+
+---
+
+## 7. Acronymes utilisés
 *   **MVP** : Produit Minimum Viable (version simplifiée du produit).
 *   **KPI** : Indicateur Clé de Performance.
 *   **SME** : Expert Métier (Subject Matter Expert).
