@@ -53,3 +53,25 @@ Calcul de la fiabilité de la donnée pour encourager la rétention (Gamificatio
 *   **Condition de Succès** : `(Heure_Dernier_Repas - Heure_Premier_Repas) ≤ 8h`.
 *   **Ajustement de la Faim** : Si `Sommeil < 7h` ET `Jeûne = Échec`, générer l'insight : *"Le manque de sommeil a impacté votre régulation hormonale."*
 
+---
+## 7. Règle RM-IMC-01 : Catégorisation et Recommandation
+*   **Formule** : $IMC = Poids_{kg} / (Taille_{m})^2$
+*   **Logique décisionnelle d'interprétation** :
+    *   Si IMC < 18.5 : Catégorie = "Maigreur" $\rightarrow$ Bloquer l'objectif "Perte".
+    *   Si 18.5 $\le$ IMC $\le$ 24.9 : Catégorie = "Normal" $\rightarrow$ Recommandation = "Maintien ou Recomposition".
+    *   Si IMC $\ge$ 25 : Catégorie = "Surpoids/Obésité" $\rightarrow$ Recommandation = "Essayez de perdre du poids sainement jusqu'à votre plage bien-être."
+
+## 8. Règle RM-IMG-01 : Calcul de la Masse Grasse (Deurenberg)
+*   **Formule** : $IMG = (1.20 \times IMC) + (0.23 \times \hat{A}ge) - (10.8 \times Sexe) - 5.4$
+    *   *Sexe = 1 pour Masculin, 0 pour Féminin.*
+
+## 9. Règle RM-MAC-01 : Ventilation Automatique des Macros (Ratio Parfait)
+En fonction de la cible calorique calculée pour l'objectif S.M.A.R.T, les coefficients énergétiques appliqués sont :
+1.  **Perte de Graisse** : Protéines (30%), Glucides (40%), Lipides (30%).
+2.  **Maintien** : Protéines (25%), Glucides (45%), Lipides (30%).
+3.  **Prise de Masse Musculaire** : Protéines (25%), Glucides (50%), Lipides (25%).
+
+## 10. Règle RM-ACT-01 : Calcul des Calories Brûlées d'Activité
+*   **Formule** : $Calories_{Activité} = TDEE_{Dynamique} - BMR$
+*   Elle isole l'énergie dépensée uniquement par le mouvement (pas) par rapport aux fonctions vitales au repos.
+
