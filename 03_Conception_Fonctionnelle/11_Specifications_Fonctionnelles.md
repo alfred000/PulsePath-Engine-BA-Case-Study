@@ -62,10 +62,11 @@ La solution est structurée autour de trois modules interdépendants :
 *   **Disponibilité Hors-ligne** : L'utilisateur doit pouvoir saisir ses logs sans connexion internet ; la synchronisation et le recalcul de la vélocité se font lors de la reconnexion.
 
 ---
-## 8. Règle de Parcours Utilisateur (Onboarding Gating)
+## 7. Règle de Parcours Utilisateur (Onboarding Gating)
 L'accès au module de journalisation quotidienne (Module de Collecte) est strictement interdit tant que les modules de **Diagnostic Initial (SF-ONB-01)** et de **Planification S.M.A.R.T (SF-ONB-02)** n'ont pas été complétés et validés en base de données.
 
-## 9. Dictionnaire de Données Étendu (Profil & Log)
+---
+## 8. Dictionnaire de Données Étendu (Profil & Log)
 
 
 | Champ | Entité | Type | Description / Règles |
@@ -75,7 +76,10 @@ L'accès au module de journalisation quotidienne (Module de Collecte) est strict
 | **Workouts_Done_Jour** | Daily Log | Entier | Nombre de séances validées sur la journée (0 ou 1). |
 | **Poids_Depart_Profil** | Profil | Décimal | Poids de référence servant de constante pour le calcul du progrès. |
 
-## 10. Comportements Spécifiques des KPIs en Surplus
+---
+
+## 9. Comportements Spécifiques des KPIs en Surplus
 *   **SF-KPI-01 (Protection des Calculs de Progression)** : Si `Poids_Jour >= Poids_Depart_Profil`, ALORS forcer la valeur d'affichage de `Perte_Totale = 0.0 kg` et `Progres_Global = 0.0%`.
 *   **SF-KPI-02 (Ajustement Trajectoire en Surplus)** : Si `Deficit_Hebdo_Reel >= 0`, bloquer le calcul de vélocité et afficher la mention : *"Échéance gelée (En surplus métabolique temporaire)"*.
 
+---
