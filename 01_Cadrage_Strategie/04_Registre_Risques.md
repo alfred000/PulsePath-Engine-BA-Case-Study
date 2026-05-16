@@ -18,6 +18,8 @@ Chaque risque est évalué selon deux critères sur une échelle de 1 à 5 :
 | **R-003** | **Comportement à risque** (restriction calorique extrême). | Santé | 2 | 5 | 🟠 **10** | Blocage automatique des calculs si le déficit est jugé dangereux. |
 | **R-004** | **Baisse de motivation** si la date d'échéance recule. | UX | 3 | 4 | 🟠 **12** | Valoriser les "Victoires Non-Scalaires" (énergie, sommeil) via le dashboard. |
 | **R-005** | **Instabilité des données** (poids) due à la rétention d'eau. | Technique | 4 | 2 | 🟡 **8** | Application systématique de la **Moyenne Glissante (SMA)** sur 7 jours. |
+| **R-006** | **Déviation cumulative** (l'utilisateur enchaîne les surplus et abandonne par sentiment d'échec). | UX / Comportement | 4 | 5 | 🔴 **20** | Activer le **Moteur de Rattrapage Intelligent (RM-COR-01)** dès qu'un écart de $\ge$ 3 jours est détecté sur la Date d'Échéance Estimée. |
+| **R-007** | **Ajustement métabolique dangereux** (le système réduit trop les calories pour compenser un écart). | Santé | 2 | 5 | 🟠 **10** | Implémenter un **Hard Guardrail** (Barrière stricte) basé sur le BMR : interdiction algorithmique de baisser l'apport sous le métabolisme de base. |
 
 ---
 
