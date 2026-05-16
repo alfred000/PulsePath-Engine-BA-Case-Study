@@ -102,3 +102,30 @@ Le pourcentage de progression exclut les valeurs négatives :
 ## 12. RM-SRT-01 : Recommandation d'Activité de Soutien
 Si l'objectif est défini sur "perte" ou "seche", le système génère la directive d'accompagnement suivante dans le plan d'action de l'utilisateur : 
 *   *Apport cible = Budget_Calories. Option cardio obligatoire : Programmer un volume minimum de 8 000 pas quotidiens ou l'équivalent en cardio LISS pour forcer la dépense d'activité.*
+
+---
+## 13. RM-COR-01 : Algorithme de Recherche d'Équilibre (Moteur de Rattrapage)
+
+### Étape 1 : Calcul de l'Écart Énergétique Global
+$$\text{Surplus\_A\_Rattraper} = (\text{DEE} - \text{DEE}_{initiale}) \times \text{Déficit\_Quotidien\_Initial}$$
+L'effort est lissé sur un horizon de rattrapage de 7 jours :
+$$\text{Effort\_Quotidien} = \frac{\text{Surplus\_A\_Rattraper}}{7}$$
+
+### Étape 2 : Modélisation des Leviers sous Contraintes
+1.  **Calcul du Levier Alimentaire** :
+    $$\text{Ajustement\_Calorique} = \text{Effort\_Quotidien} \times 0.40$$
+    $$\text{Cible\_Temporaire\_Calories} = \text{Budget\_Calories\_Initial} - \text{Ajustement\_Calorique}$$
+2.  **Application de la Contrainte Métabolique (Hard Guardrail)** :
+    *   Si $\text{Cible\_Temporaire\_Calories} < \text{BMR}$ :
+        $$\text{Cible\_Temporaire\_Calories} = \text{BMR}$$
+        $$\text{Effort\_Résiduel} = \text{Effort\_Quotidien} - (\text{Budget\_Calories\_Initial} - \text{BMR})$$
+    *   Sinon :
+        $$\text{Effort\_Résiduel} = \text{Effort\_Quotidien} \times 0.60$$
+
+### Étape 3 : Conversion de l'Effort Résiduel en Activité (Pas / LISS)
+En utilisant un modèle prédictif linéaire de dépense lié au poids corporel de l'utilisateur (où 1 000 pas brûlent environ $Poids \times 0.5 \text{ kcal}$), le volume de pas supplémentaire est calculé comme suit :
+$$\text{Calories\_Par\_1000\_Pas} = \text{Poids\_Actuel} \times 0.5$$
+$$\text{Pas\_Suppléments} = \left( \frac{\text{Effort\_Résiduel}}{\text{Calories\_Par\_1000\_Pas}} \right) \times 1000$$
+$$\text{Nouvelle\_Cible\_Pas} = \text{Objectif\_Pas\_Initial} + \text{Pas\_Suppléments}$$
+
+*   **Contrainte d'Épuisement** : Si $\text{Nouvelle\_Cible\_Pas} > 18000$, forcer $\text{Nouvelle\_Cible\_Pas} = 18000$ et déclencher l'alerte **SF-ANP-03**.
