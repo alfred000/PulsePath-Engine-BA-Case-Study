@@ -50,19 +50,32 @@ Ce glossaire définit les concepts clés et les indicateurs utilisés dans le pr
 *   **Activité légère (Coeff. 1.375)** : Station debout prolongée ou marche légère régulière au cours de la journée.
 *   **Activité modérée (Coeff. 1.55)** : Mode de vie actif, marche fréquente et entraînements physiques légers.
 *   **Activité élevée (Coeff. 1.725)** : Métier à forte contrainte physique ou entraînements sportifs quotidiens de haute intensité.
-
+---
 ## 9. Indicateurs de Progression et d'Évolution (KPIs)
 *   **Compteur de Jours Cumulés** : Nombre total de jours écoulés depuis la date exacte de la fixation de l'objectif S.M.A.R.T. Ce compteur s'incrémente continuellement, quel que soit le comportement alimentaire.
 *   **Perte Totale (kg)** : Écart absolu entre le *Poids de départ* enregistré lors du diagnostic et le *Poids du jour*.
 *   **Progrès Global (%)** : Pourcentage de réalisation de l'objectif de perte de poids. Formule : `(Poids_Départ - Poids_Jour) / (Poids_Départ - Poids_Cible) * 100`.
 *   **Surplus Métabolique Temporaire (Gel des KPIs)** : État logique déclenché lorsque le poids du jour est supérieur ou égal au poids de départ. Le système fige la perte et le progrès à 0 pour éviter les calculs négatifs absurdes, tout en laissant le compteur de jours s'incrémenter.
-
+---
 ## 10. Planification Sportive
 *   **Fréquence Sportive Programmée** : Nombre de séances d'activité physique ciblées par l'utilisateur lors de la planification (ex: 4 séances/semaine).
 *   **Volume Hebdomadaire Validé** : Somme cumulée des séances réelles déclarées dans le journal quotidien au cours de la semaine glissante en cours.
+---
+## 11. Concepts de Modélisation Prédictive et Correction
+*   **Moteur de Rattrapage Intelligent (Course-Correction Engine)** : Algorithme prescriptif qui s'active en cas de déviation par rapport à la trajectoire initiale. Il recalcule les cibles à court terme pour ramener l'utilisateur sur sa trajectoire de référence.
+*   **Méthode d'Optimisation sous Contraintes (Recherche de Racines)** : Logique mathématique simulant l'impact de différents scénarios d'ajustement afin de trouver le point d'équilibre exact annulant l'écart de jours accumulés, tout en respectant les limites biologiques de l'utilisateur.
+*   **Horizon Glissant de Rattrapage** : Fenêtre temporelle fixe (définie à 7 jours dans le MVP) sur laquelle le surplus calorique accumulé doit être lissé et éliminé.
 
 ---
-## 11. Acronymes utilisés
+
+## 12. Leviers Fonctionnels d'Ajustement
+*   **Levier Nutritionnel (Alimentation)** : Réduction temporaire et calibrée du budget calorique quotidien pour absorber une partie de l'écart énergétique.
+*   **Levier d'Activité (Pas / Cardio LISS)** : Augmentation compensatoire du volume d'activité physique (Cardio à basse intensité / Low-Intensity Steady State) pour forcer la dépense énergétique journalière.
+*   **Hard Guardrail (Barrière Physiologique)** : Limite logicielle inviolable empêchant l'algorithme de proposer des cibles dangereuses (ex: apport inférieur au BMR ou volume d'activité supérieur à 18 000 pas/jour).
+
+---
+
+## 13. Acronymes utilisés
 *   **MVP** : Produit Minimum Viable (version simplifiée du produit).
 *   **KPI** : Indicateur Clé de Performance.
 *   **SME** : Expert Métier (Subject Matter Expert).
