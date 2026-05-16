@@ -105,27 +105,29 @@ Si l'objectif est défini sur "perte" ou "seche", le système génère la direct
 
 ---
 ## 13. RM-COR-01 : Algorithme de Recherche d'Équilibre (Moteur de Rattrapage)
+Cet algorithme prescriptif sous contraintes s'active en cas de déviation pour ramener l'utilisateur vers sa trajectoire sur un horizon glissant de 7 jours.
 
-### Étape 1 : Calcul de l'Écart Énergétique Global
-$$\text{Surplus\_A\_Rattraper} = (\text{DEE} - \text{DEE}_{initiale}) \times \text{Déficit\_Quotidien\_Initial}$$
-L'effort est lissé sur un horizon de rattrapage de 7 jours :
-$$\text{Effort\_Quotidien} = \frac{\text{Surplus\_A\_Rattraper}}{7}$$
+### Étape A : Calcul de l'Écart Énergétique Global
+*   `Surplus_A_Rattraper = (DEE_Actuelle - DEE_Initiale) * Deficit_Quotidien_Initial`
+*   `Effort_Quotidien_Requis = Surplus_A_Rattraper / 7`
 
-### Étape 2 : Modélisation des Leviers sous Contraintes
-1.  **Calcul du Levier Alimentaire** :
-    $$\text{Ajustement\_Calorique} = \text{Effort\_Quotidien} \times 0.40$$
-    $$\text{Cible\_Temporaire\_Calories} = \text{Budget\_Calories\_Initial} - \text{Ajustement\_Calorique}$$
+### Étape B : Modélisation des Leviers sous Contraintes (Règle 40/60)
+1.  **Calcul du Levier Alimentaire (40%)** :
+    *   `Ajustement_Calorique = Effort_Quotidien_Requis * 0.40`
+    *   `Cible_Temporaire_Calories = Budget_Calories_Initial - Ajustement_Calorique`
+
 2.  **Application de la Contrainte Métabolique (Hard Guardrail)** :
-    *   Si $\text{Cible\_Temporaire\_Calories} < \text{BMR}$ :
-        $$\text{Cible\_Temporaire\_Calories} = \text{BMR}$$
-        $$\text{Effort\_Résiduel} = \text{Effort\_Quotidien} - (\text{Budget\_Calories\_Initial} - \text{BMR})$$
-    *   Sinon :
-        $$\text{Effort\_Résiduel} = \text{Effort\_Quotidien} \times 0.60$$
+    *   **SI** `Cible_Temporaire_Calories < BMR` :  
+        *   `Cible_Temporaire_Calories = BMR` (Blocage au niveau de survie)
+        *   `Effort_Residuel = Effort_Quotidien_Requis - (Budget_Calories_Initial - BMR)` (Le surplus restant est basculé sur l'activité)
+    *   **SINON** :  
+        *   `Effort_Residuel = Effort_Quotidien_Requis * 0.60`
 
-### Étape 3 : Conversion de l'Effort Résiduel en Activité (Pas / LISS)
-En utilisant un modèle prédictif linéaire de dépense lié au poids corporel de l'utilisateur (où 1 000 pas brûlent environ $Poids \times 0.5 \text{ kcal}$), le volume de pas supplémentaire est calculé comme suit :
-$$\text{Calories\_Par\_1000\_Pas} = \text{Poids\_Actuel} \times 0.5$$
-$$\text{Pas\_Suppléments} = \left( \frac{\text{Effort\_Résiduel}}{\text{Calories\_Par\_1000\_Pas}} \right) \times 1000$$
-$$\text{Nouvelle\_Cible\_Pas} = \text{Objectif\_Pas\_Initial} + \text{Pas\_Suppléments}$$
+### Étape C : Conversion de l'Effort Résiduel en Activité (Pas / LISS)
+Le système utilise un modèle prédictif linéaire lié au poids de l'utilisateur (1 000 pas brûlent environ `Poids_Actuel * 0.5` kcal) :
 
-*   **Contrainte d'Épuisement** : Si $\text{Nouvelle\_Cible\_Pas} > 18000$, forcer $\text{Nouvelle\_Cible\_Pas} = 18000$ et déclencher l'alerte **SF-ANP-03**.
+*   `Calories_Par_1000_Pas = Poids_Actuel * 0.5`
+*   `Pas_Supplementaires_Requis = (Effort_Residuel / Calories_Par_1000_Pas) * 1000`
+*   `Nouvelle_Cible_Pas = Objectif_Pas_Initial + Pas_Supplementaires_Requis`
+
+*   **Contrainte d'Épuisement (Hard Guardrail)** : Si `Nouvelle_Cible_Pas > 18000`, le système force la valeur à 18 000 pas et déclenche l'alerte de révision de l'échéance temporelle (`SF-ANP-03`).
