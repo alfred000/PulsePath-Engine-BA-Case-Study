@@ -91,12 +91,23 @@ En fonction de la cible calorique calculée pour l'objectif S.M.A.R.T, les coeff
 ---
 
 ## 11. RM-KPI-01 : Calcul du Progrès Linéaire (Objectif Perte/Sèche)
-Le pourcentage de progression exclut les valeurs négatives :
-*   Si `Poids_Actuel < Poids_Depart` : 
-    $$\text{Progrès (\%)} = \left( \frac{\text{Poids\_Départ} - \text{Poids\_Actuel}}{\text{Poids\_Départ} - \text{Poids\_Cible}} \right) \times 100$$
-*   Si `Poids_Actuel >= Poids_Depart` :
-    $$\text{Progrès (\%)} = 0.0\%$$
-    
+Cette règle permet d'évaluer le pourcentage de réalisation de l'objectif de l'utilisateur tout en protégeant le système contre les valeurs négatives ou aberrantes en cas de surplus.
+
+*   **Calcul de la Perte Totale (kg)** :  
+    *   **SI** `Poids_Actuel < Poids_Depart` :  
+        `Perte_Totale_Kg = Poids_Depart - Poids_Actuel`
+    *   **SINON** :  
+        `Perte_Totale_Kg = 0.0`
+
+*   **Calcul du Pourcentage de Progrès (%)** :  
+    *   **SI** `Poids_Actuel >= Poids_Depart` :  
+        `Progres_Global = 0.0` (L'utilisateur est en surplus temporaire, le progrès ne peut pas être négatif)
+    *   **SI** `Poids_Actuel <= Poids_Cible` :  
+        `Progres_Global = 100.0` (L'objectif est atteint ou dépassé)
+    *   **SINON** :  
+        `Total_A_Perdre = Poids_Depart - Poids_Cible`  
+        `Progres_Global = (Perte_Totale_Kg / Total_A_Perdre) * 100`
+
 ---
 
 ## 12. RM-SRT-01 : Recommandation d'Activité de Soutien
