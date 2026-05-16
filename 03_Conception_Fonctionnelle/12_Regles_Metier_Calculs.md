@@ -6,7 +6,7 @@ Ce document répertorie les algorithmes de santé et les logiques décisionnelle
 ---
 
 ## 2. Règle Métabolique
-# 2.1. Règle RM-MET-01 : Calcul du TDEE Dynamique
+### 2.1. Règle RM-MET-01 : Calcul du TDEE Dynamique
 Le **TDEE (Total Daily Energy Expenditure)** représente la dépense énergétique totale réelle sur 24h.
 
 ### A. Calcul du Métabolisme de Base (BMR)
@@ -22,7 +22,7 @@ Le système remplace les multiplicateurs fixes par un calcul basé sur le `steps
 
 **Formule Finale** : `TDEE = BMR × Facteur_Activité`
 
-# 2.2. RM-MET-02 : Facteur d'Activité Initial (Profil)
+### 2.2. RM-MET-02 : Facteur d'Activité Initial (Profil)
 Calcul de la maintenance théorique de départ avant l'activation des trackers de pas :
 *   `Choix = 1` $\rightarrow$ Multiplicateur = `1.2`
 *   `Choix = 2` $\rightarrow$ Multiplicateur = `1.375`
