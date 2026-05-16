@@ -83,3 +83,22 @@ L'accès au module de journalisation quotidienne (Module de Collecte) est strict
 *   **SF-KPI-02 (Ajustement Trajectoire en Surplus)** : Si `Deficit_Hebdo_Reel >= 0`, bloquer le calcul de vélocité et afficher la mention : *"Échéance gelée (En surplus métabolique temporaire)"*.
 
 ---
+
+## 10. SF-ANP-01 : Activation du Moteur de Rattrapage
+*   **Déclencheur** : Une divergence positive entre la Date d'Échéance Estimée ($DEE$) et la Date d'Échéance Initiale ($DEE_{initiale}$) supérieure ou égale à 3 jours sur une moyenne glissante hebdomadaire.
+*   **Comportement du Système** : Le système suspend temporairement le dashboard standard et bascule l'interface en mode "Plan de Correction Dynamique".
+  
+---
+
+## 11. SF-ANP-02 : Répartition des Leviers d'Ajustement (Règle 40/60)
+Pour combler l'écart énergétique accumulé, le système doit diviser l'effort de rattrapage quotidien de la manière suivante :
+1.  **Levier Alimentaire (40%)** : Pris en charge par une réduction contrôlée de la cible calorique, à condition que : `Nouvelle_Cible_Calories >= BMR_Utilisateur`.
+2.  **Levier d'Activité (60%)** : Pris en charge par une augmentation des pas quotidiens ou une prescription de minutes de Cardio LISS.
+*   **Cas de Débordement** : Si le Levier Alimentaire touche la barrière du BMR, 100% de l'effort restant est automatiquement basculé et absorbé par le Levier d'Activité, dans la limite de 18 000 pas/jour.
+
+---
+
+## 12. SF-ANP-03 : Notification et Engagement UX
+Si l'écart est trop important pour être mathématiquement rattrapé en 7 jours sous les contraintes de sécurité (BMR et Max Pas), le système doit générer une notification d'arbitrage : *"Écart trop important pour une correction saine en 7 jours. Souhaitez-vous étendre votre échéance de X jours ou lisser le rattrapage sur 14 jours ?"*
+
+---
