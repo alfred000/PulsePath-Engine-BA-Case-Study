@@ -1,31 +1,34 @@
-# 📄 Description du Processus (To-Be) : PulsePath Engine
+# 📄 Description du Processus (To-Be) : PulsePath Engine (V2)
 
 ## 1. Présentation du Nouveau Flux Métier
-Le processus impose un onboarding analytique strict pour éliminer l'incertitude utilisateur et garantir la qualité de la planification initiale.
+Le processus métier est restructuré pour garantir un onboarding analytique complet. Les indicateurs d'évolution (perte en kg et progrès en %) sont isolés et protégés par un système de gel conditionnel afin de ne pas fausser les rapports en cas de surplus temporaire.
 
 ## 2. Diagramme de Flux (Syntaxe Mermaid)
 
 ```mermaid
 graph TD
     %% ÉTAPE 1: ONBOARDING & DIAGNOSTIC
-    Start([Début : Inscription Utilisateur]) --> A[Saisie Profil : Genre, Âge, Taille, Poids Actuel]
-    A --> B[Calculs Profil : IMC, IMG, Plage de Poids Bien-être]
-    B --> C[Calcul du TDEE de Maintenance initial]
+    Start([Début : Inscription Utilisateur]) --> A[Saisie Profil : Genre, Âge, Taille, Poids de Départ, Niveau d'Activité de base]
+    A --> B[Calculs Biométriques : IMC, IMG Formule Deurenberg, Plage Bien-être]
+    B --> C[Calcul du TDEE de Maintenance Initial]
     
     %% ÉTAPE 2: PLANIFICATION S.M.A.R.T
-    C --> D[Sélection Objectif : Perte, Maintien, Prise de Masse]
-    D --> E[Calcul Automatique du Budget Calorique Ciblé & Ratio Macros]
+    C --> D[Sélection Objectif : Perte, Seiche, Maintien, Gain]
+    D --> E[Saisie Fréquence Sportive : Nombre de séances ciblées par semaine]
+    E --> F[Calcul Automatique du Budget Calorique & Ventilation des Macros Ratios]
     
-    %% ÉTAPE 3: JOURNALISATION QUOTIDIENNE (Isolée pour futures API)
-    E --> F[Déclenchement Quotidien : Saisie du Journal Log]
-    F --> G[Traitement Log : Poids, Calories, Pas, Sommeil, Macros, Jeûne]
-    G --> H[Vérification du Score d'Intégrité de la donnée]
-    H --> I[Calcul du TDEE Dynamique via le volume de pas]
-    I --> J[Moteur de Vélocité : Ajustement de la Date d'Échéance Estimée]
-    J --> K[Génération des Coach Insights]
-    K --> F
+    %% ÉTAPE 3: JOURNALISATION QUOTIDIENNE & KPIS
+    F --> G[Déclenchement Quotidien : Saisie du Journal Log]
+    G --> H[Calcul du TDEE Dynamique via le volume de pas]
+    H --> I{Poids du jour > Poids de départ ?}
+    I -- OUI --> J[Gel des KPIs : Perte = 0kg, Progrès = 0%, Date Échéance Gelée]
+    I -- NON --> K[Calcul des KPIs : Perte Réelle, % de Progrès Global, Date d'Échéance Révisée]
+    J --> L[Incrémentation automatique du compteur de Jours Écoulés]
+    K --> L
+    L --> M[Agrégation des Séances de Sport Effectuées dans la Semaine]
+    M --> N[Génération des Coach Insights & Restitution Dashboard]
+    N --> G
 ```
-
 
 ---
 
