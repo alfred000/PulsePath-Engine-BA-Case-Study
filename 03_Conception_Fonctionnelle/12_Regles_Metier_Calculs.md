@@ -5,7 +5,8 @@ Ce document répertorie les algorithmes de santé et les logiques décisionnelle
 
 ---
 
-## 2. Règle RM-MET-01 : Calcul du TDEE Dynamique
+## 2. Règle Métabolique
+# 2.1. Règle RM-MET-01 : Calcul du TDEE Dynamique
 Le **TDEE (Total Daily Energy Expenditure)** représente la dépense énergétique totale réelle sur 24h.
 
 ### A. Calcul du Métabolisme de Base (BMR)
@@ -21,8 +22,14 @@ Le système remplace les multiplicateurs fixes par un calcul basé sur le `steps
 
 **Formule Finale** : `TDEE = BMR × Facteur_Activité`
 
----
+# 2.2. RM-MET-02 : Facteur d'Activité Initial (Profil)
+Calcul de la maintenance théorique de départ avant l'activation des trackers de pas :
+*   `Choix = 1` $\rightarrow$ Multiplicateur = `1.2`
+*   `Choix = 2` $\rightarrow$ Multiplicateur = `1.375`
+*   `Choix = 3` $\rightarrow$ Multiplicateur = `1.55`
+*   `Choix = 4` $\rightarrow$ Multiplicateur = `1.725`
 
+---
 ## 3. Règle RM-VEL-01 : Calcul de la Vélocité et de l'Échéance
 L'algorithme de vélocité projette la date de réussite en fonction du comportement récent.
 
@@ -61,9 +68,13 @@ Calcul de la fiabilité de la donnée pour encourager la rétention (Gamificatio
     *   Si 18.5 $\le$ IMC $\le$ 24.9 : Catégorie = "Normal" $\rightarrow$ Recommandation = "Maintien ou Recomposition".
     *   Si IMC $\ge$ 25 : Catégorie = "Surpoids/Obésité" $\rightarrow$ Recommandation = "Essayez de perdre du poids sainement jusqu'à votre plage bien-être."
 
+---
+
 ## 8. Règle RM-IMG-01 : Calcul de la Masse Grasse (Deurenberg)
 *   **Formule** : $IMG = (1.20 \times IMC) + (0.23 \times \hat{A}ge) - (10.8 \times Sexe) - 5.4$
     *   *Sexe = 1 pour Masculin, 0 pour Féminin.*
+
+---
 
 ## 9. Règle RM-MAC-01 : Ventilation Automatique des Macros (Ratio Parfait)
 En fonction de la cible calorique calculée pour l'objectif S.M.A.R.T, les coefficients énergétiques appliqués sont :
@@ -71,7 +82,23 @@ En fonction de la cible calorique calculée pour l'objectif S.M.A.R.T, les coeff
 2.  **Maintien** : Protéines (25%), Glucides (45%), Lipides (30%).
 3.  **Prise de Masse Musculaire** : Protéines (25%), Glucides (50%), Lipides (25%).
 
+---
+
 ## 10. Règle RM-ACT-01 : Calcul des Calories Brûlées d'Activité
 *   **Formule** : $Calories_{Activité} = TDEE_{Dynamique} - BMR$
 *   Elle isole l'énergie dépensée uniquement par le mouvement (pas) par rapport aux fonctions vitales au repos.
 
+---
+
+## 11. RM-KPI-01 : Calcul du Progrès Linéaire (Objectif Perte/Sèche)
+Le pourcentage de progression exclut les valeurs négatives :
+*   Si `Poids_Actuel < Poids_Depart` : 
+    $$\text{Progrès (\%)} = \left( \frac{\text{Poids\_Départ} - \text{Poids\_Actuel}}{\text{Poids\_Départ} - \text{Poids\_Cible}} \right) \times 100$$
+*   Si `Poids_Actuel >= Poids_Depart` :
+    $$\text{Progrès (\%)} = 0.0\%$$
+    
+---
+
+## 12. RM-SRT-01 : Recommandation d'Activité de Soutien
+Si l'objectif est défini sur "perte" ou "seche", le système génère la directive d'accompagnement suivante dans le plan d'action de l'utilisateur : 
+*   *Apport cible = Budget_Calories. Option cardio obligatoire : Programmer un volume minimum de 8 000 pas quotidiens ou l'équivalent en cardio LISS pour forcer la dépense d'activité.*
