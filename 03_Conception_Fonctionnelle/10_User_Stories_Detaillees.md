@@ -69,43 +69,39 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
 
 ---
 
-## US-07 : Initialisation du Profil Métabolique (Must)
+## US-07 : Initialisation du Profil Métabolique (Should)
 **Priorité :** Should-have | **Estimation :** 5 SP
 
 *   **Énoncé :** En tant qu'utilisateur authentifié, Je veux renseigner mon profil biologique (âge, sexe, taille, poids, facteur d'activité), Afin de fournir au système expert les variables nécessaires au calcul de mon métabolisme de base (BMR).
 
 *   **Critères d'Acceptation (CA) :**
-   *   **CA 1** : Validation stricte des données d'entrée (Front-End & Back-End)
-         *    **Given** L'écran de configuration du profil utilisateur.
-         *    **When** L'utilisateur valide le formulaire.
-         *    **Then** Les champs doivent respecter les bornes de sécurité suivantes : *Âge [15 - 90 ans]*, *Taille [100 - 250 cm]*, *Poids [40 - 250 kg]*.
-         *    **And** Si une valeur est hors bornes, le bouton de validation reste désactivé et l'API rejette un code `400 Bad Request`.
+   *    **CA 1** : Validation stricte des données d'entrée (Front-End & Back-End)
+        *    **Given** L'écran de configuration du profil utilisateur.
+        *    **When** L'utilisateur valide le formulaire.
+        *    **Then** Les champs doivent respecter les bornes de sécurité suivantes : *Âge [15 - 90 ans]*, *Taille [100 - 250 cm]*, *Poids [40 - 250 kg]*.
+        *    **And** Si une valeur est hors bornes, le bouton de validation reste désactivé et l'API rejette un code `400 Bad Request`.
    *   **CA 2** : Persistance et isolation des données
-         *    **Given** Une requête valide `POST /api/profile`.
-         *    **When** L'API persiste les données dans le modèle `UserProfile` de la base SQLite.
-         *    **Then** Les données physiologiques doivent être strictement associées au `UserId` extrait du token JWT de la session courante.
+       *    **Given** Une requête valide `POST /api/profile`.
+       *    **When** L'API persiste les données dans le modèle `UserProfile` de la base SQLite.
+       *    **Then** Les données physiologiques doivent être strictement associées au `UserId` extrait du token JWT de la session courante.
 
 ---
 
-## 🎯 US-03 : Définition d'Objectifs S.M.A.R.T (Should)
+## 🎯 US-08 : Définition d'Objectifs S.M.A.R.T (Should)
+**Priorité :** Should-have | **Estimation :** 5 SP
 
-**En tant qu'** utilisateur ayant configuré son profil  
-**Je veux** définir un objectif de poids et un rythme hebdomadaire de progression  
-**Afin de** générer automatiquement ma prescription calorique et mes macros sans mettre ma santé en danger.
-
-### 🛠️ Critères d'Acceptation (Gherkin)
-
-#### CA-03.1 : Garde-fou de sécurité métabolique (RM-GOAL-01)
-* **Given** Un utilisateur ciblant une perte de poids agressive.
-* **When** L'utilisateur tente de valider un rythme supérieur à **1% de son poids corporel par semaine** OU un déficit qui abaisse ses calories sous son **BMR de survie**.
-* **Then** Le système bloque la validation.
-* **And** Le système affiche une alerte contextuelle de sécurité et refuse de générer la feuille de route.
-
-#### CA-03.2 : Calcul instantané de la feuille de route
-* **Given** Un objectif physiologiquement validé par le système expert.
-* **When** L'enregistrement de l'objectif est confirmé en base de données.
-* **Then** Le système calcule instantanément et affiche sur le Dashboard les valeurs cibles de la phase.
-* **And** Ces valeurs incluent le **TDEE dynamique**, les **calories cibles journalières**, et la répartition des **macro-nutriments** (RM-MAC-01).
+*   **Énoncé :** En tant qu'utilisateur ayant configuré son profil, Je veux définir un objectif de poids et un rythme hebdomadaire de progression, Afin de générer automatiquement ma prescription calorique et mes macros sans mettre ma santé en danger.
+*   **Critères d'Acceptation (CA) :**
+    *   **CA 1** : Garde-fou de sécurité métabolique (RM-GOAL-01)
+        * **Given** Un utilisateur ciblant une perte de poids agressive.
+        * **When** L'utilisateur tente de valider un rythme supérieur à **1% de son poids corporel par semaine** OU un déficit qui abaisse ses calories sous son **BMR de survie**.
+        * **Then** Le système bloque la validation.
+        * **And** Le système affiche une alerte contextuelle de sécurité et refuse de générer la feuille de route.
+    *   **CA 2** : Calcul instantané de la feuille de route
+        * **Given** Un objectif physiologiquement validé par le système expert.
+        * **When** L'enregistrement de l'objectif est confirmé en base de données.
+        * **Then** Le système calcule instantanément et affiche sur le Dashboard les valeurs cibles de la phase.
+        * **And** Ces valeurs incluent le **TDEE dynamique**, les **calories cibles journalières**, et la répartition des **macro-nutriments** (RM-MAC-01).
 
 ---
 
