@@ -48,4 +48,23 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
     *   **CA 2** : Si cette durée est ≤ 8 heures, la journée est validée "Objectif Jeûne Atteint".
     *   **CA 3** : Le système doit empêcher la saisie d'une heure de fin antérieure à l'heure de début sur la même journée civile.
 
+---
+## 6. US-06 : Inscription & Connexion Sécurisée 
+**Priorité :** Should-have | **Estimation :** 5 SP
 
+*   **Énoncé :**  En tant que nouvel utilisateur, Je veux créer un compte avec un email et un mot de passe sécurisé, puis m'authentifier, Afin de protéger mes données physiologiques personnelles et accéder à mon espace sécurisé.
+*   **Critères d'Acceptation (CA) :**
+    *   **CA 1** : Sécurité du stockage (Back-End)
+        *   **Given** Un utilisateur qui soumet le formulaire d'inscription.
+        *   **When** L'API traite la demande d'inscription.
+        *   **Then** Le mot de passe doit être obligatoirement salé et haché avec l'algorithme BCrypt avant l'insertion dans la table Users de SQLite.
+    *   **CA 2** : Délivrance du Jeton de Session (JWT)
+        *    **Given** Un utilisateur enregistré qui fournit des identifiants valides sur la route /api/auth/login.
+        *    **When** L'authentification réussit.
+        *    **Then** Le serveur doit retourner un code 200 OK contenant un token JWT valide signé contenant le UserId.
+    *   **CA 3** : Gestion des erreurs de connexion
+         *    **Given** Un utilisateur saisissant un email inexistant ou un mot de passe erroné.
+         *    **When** La requête de connexion est envoyée.
+         *    **Then** L'API doit retourner une erreur standardisée 401 Unauthorized avec un message générique pour éviter l'énumération de comptes.
+
+     
