@@ -44,7 +44,7 @@ Ce document recense l'ensemble des besoins fonctionnels et techniques identifié
 ### 🚀 Release 1.0 (MVP)
 Focus exclusif sur les **Must-have**. 
 *   **Objectif** : Fournir à l'utilisateur une trajectoire de poids fiable basée sur son métabolisme réel.
-*   **Contenu** : US-01, US-02, US-03.
+*   **Contenu** : US-01, US-02, US-03, US-10, US-11.
 
 ### 📈 Release 1.1 (Optimisation Métabolique)
 Intégration des **Should-have**.
