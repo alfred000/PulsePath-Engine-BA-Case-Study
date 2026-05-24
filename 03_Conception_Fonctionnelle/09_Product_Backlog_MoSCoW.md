@@ -28,6 +28,12 @@ Ce document recense l'ensemble des besoins fonctionnels et techniques identifié
 | **US-07** | Coaching | Génération d'Insights prédictifs automatisés | **Could** | 🟡 Moyenne | 8 |
 | **US-08** | Technique | Synchronisation API avec montres connectées | **Won't** | 🟠 Haute | 13 |
 | **US-09** | UX | Export des rapports de progression en PDF | **Won't** | 🟢 Basse | 3 |
+| **US-10** | Connexion | Authentification JWT sécurisée | **Must** | 🔴 Critique | 5 |
+| **US-11** | Profil | Formulaire de Profil Métabolique initial | **Must** | 🔴 Critique | 5 |
+| **US-12** | Objectif | Définition d'objectifs S.M.A.R.T avec barrière de sécurité de 1% | **Should** | 🟠 Haute | 3 |
+| **US-13** | Journal | Journal de suivi quotidien du poids et des calories | **Should** | 🟠 Haute | 3 |
+| **US-14** | Graphique| Graphiques de progression temporelle (Courbe réelle vs théorique) | **Could** | 🟡 Moyenne | 2 |
+| **US-15** | Authentication | Authentification tierce (Google/Apple), Partage social des progrès. | **Won't** | 🟠 Haute | 10 |
 
 *\*SP : Story Points (Estimation relative de l'effort de développement)*
 
