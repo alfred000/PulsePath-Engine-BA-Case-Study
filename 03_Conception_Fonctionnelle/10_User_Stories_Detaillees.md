@@ -87,7 +87,7 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
 
 ---
 
-## 🎯 US-08 : Définition d'Objectifs S.M.A.R.T (Should)
+## US-08 : Définition d'Objectifs S.M.A.R.T (Should)
 **Priorité :** Should-have | **Estimation :** 5 SP
 
 *   **Énoncé :** En tant qu'utilisateur ayant configuré son profil, Je veux définir un objectif de poids et un rythme hebdomadaire de progression, Afin de générer automatiquement ma prescription calorique et mes macros sans mettre ma santé en danger.
@@ -105,22 +105,18 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
 
 ---
 
-## 📉 US-04 : Suivi des Progrès & Journal Quotidien (Should)
+## US-09 : Suivi des Progrès & Journal Quotidien (Should)
+**Priorité :** Should-have | **Estimation :** 5 SP
 
-**En tant qu'** utilisateur engagé dans son programme  
-**Je veux** consigner chaque jour mon poids réel, mes apports caloriques et mes pas  
-**Afin de** visualiser ma trajectoire de progression et permettre au moteur de rattrapage de s'activer en cas d'écart.
-
-### 🛠️ Critères d'Acceptation (Gherkin)
-
-#### CA-04.1 : Règle d'unicité du journal quotidien
-* **Given** Un utilisateur qui a déjà soumis son journal pour le jour J.
-* **When** Il tente d'accéder à nouveau au formulaire de saisie pour la même date.
-* **Then** Le système passe le formulaire en mode édition (`PUT`) au lieu d'une création (`POST`).
-* **And** Cela empêche l'apparition de doublons chronologiques en base SQLite.
-
-#### CA-04.2 : Déclenchement de l'Insight de Trajectoire
-* **Given** Un historique de saisies sur les 3 derniers jours présentant un écart moyen de plus de **15%** par rapport au déficit planifié.
-* **When** L'utilisateur charge son Dashboard Angular.
-* **Then** Le Bloc 3 (Insights) doit afficher une notification dynamique signalant l'activation imminente du protocole de rattrapage (RM-COR-01).
+*   **Énoncé :** En tant qu'utilisateur engagé dans son programme, Je veux consigner chaque jour mon poids réel, mes apports caloriques et mes pas,Afin de visualiser ma trajectoire de progression et permettre au moteur de rattrapage de s'activer en cas d'écart.
+*   **Critères d'Acceptation (CA) :**
+    *   **CA 1** : Règle d'unicité du journal quotidien
+        * **Given** Un utilisateur qui a déjà soumis son journal pour le jour J.
+        * **When** Il tente d'accéder à nouveau au formulaire de saisie pour la même date.
+        * **Then** Le système passe le formulaire en mode édition (`PUT`) au lieu d'une création (`POST`).
+        * **And** Cela empêche l'apparition de doublons chronologiques en base SQLite.
+    *   **CA 2** : Déclenchement de l'Insight de Trajectoire
+        * **Given**Un historique de saisies sur les 3 derniers jours présentant un écart moyen de plus de **15%** par rapport au déficit planifié.
+        * **When** L'utilisateur charge son Dashboard Angular.
+        * **Then** Le Bloc 3 (Insights) doit afficher une notification dynamique signalant l'activation imminente du protocole de rattrapage (RM-COR-01).
      
