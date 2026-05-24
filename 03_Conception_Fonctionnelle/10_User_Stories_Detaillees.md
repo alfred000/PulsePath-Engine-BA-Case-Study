@@ -57,7 +57,7 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
     *   **CA 1** : Sécurité du stockage (Back-End)
         *   **Given** Un utilisateur qui soumet le formulaire d'inscription.
         *   **When** L'API traite la demande d'inscription.
-        *   **Then** Le mot de passe doit être obligatoirement salé et haché avec l'algorithme BCrypt avant l'insertion dans la table Users de SQLite.
+        *   **Then** Le mot de passe doit être obligatoirement salé et haché avec l'algorithme BCrypt avant l'insertion dans la table `Users` de SQLite.
     *   **CA 2** : Délivrance du Jeton de Session (JWT)
         *    **Given** Un utilisateur enregistré qui fournit des identifiants valides sur la route /api/auth/login.
         *    **When** L'authentification réussit.
