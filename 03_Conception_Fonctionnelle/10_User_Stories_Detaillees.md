@@ -76,16 +76,16 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
 
 *   **Critères d'Acceptation (CA) :**
 
-   *  **CA 1** : Validation stricte des données d'entrée (Front-End & Back-End)
-      *    **Given** L'écran de configuration du profil utilisateur.
-      *    **When** L'utilisateur valide le formulaire.
-      *    **Then** Les champs doivent respecter les bornes de sécurité suivantes : *Âge [15 - 90 ans]*, *Taille [100 - 250 cm]*, *Poids [40 - 250 kg]*.
-      *    **And** Si une valeur est hors bornes, le bouton de validation reste désactivé et l'API rejette un code `400 Bad Request`.
+   *   **CA 1** : Validation stricte des données d'entrée (Front-End & Back-End)
+         *    **Given** L'écran de configuration du profil utilisateur.
+         *    **When** L'utilisateur valide le formulaire.
+         *    **Then** Les champs doivent respecter les bornes de sécurité suivantes : *Âge [15 - 90 ans]*, *Taille [100 - 250 cm]*, *Poids [40 - 250 kg]*.
+         *    **And** Si une valeur est hors bornes, le bouton de validation reste désactivé et l'API rejette un code `400 Bad Request`.
 
-   *  **CA 2** : Persistance et isolation des données
-      *    **Given** Une requête valide `POST /api/profile`.
-      *    **When** L'API persiste les données dans le modèle `UserProfile` de la base SQLite.
-      *    **Then** Les données physiologiques doivent être strictement associées au `UserId` extrait du token JWT de la session courante.
+   *   **CA 2** : Persistance et isolation des données
+         *    **Given** Une requête valide `POST /api/profile`.
+         *    **When** L'API persiste les données dans le modèle `UserProfile` de la base SQLite.
+         *    **Then** Les données physiologiques doivent être strictement associées au `UserId` extrait du token JWT de la session courante.
 
 ---
 
