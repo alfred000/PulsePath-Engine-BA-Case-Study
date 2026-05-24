@@ -67,4 +67,66 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
          *    **When** La requête de connexion est envoyée.
          *    **Then** L'API doit retourner une erreur standardisée `401 Unauthorized` avec un message générique pour éviter l'énumération de comptes.
 
+---
+
+## US-07 : Initialisation du Profil Métabolique (Must)
+**Priorité :** Should-have | **Estimation :** 5 SP
+
+*   **Énoncé :** En tant qu'utilisateur authentifié, Je veux renseigner mon profil biologique (âge, sexe, taille, poids, facteur d'activité), Afin de fournir au système expert les variables nécessaires au calcul de mon métabolisme de base (BMR).
+
+*   **Critères d'Acceptation (CA) :**
+
+   *  **CA 1** : Validation stricte des données d'entrée (Front-End & Back-End)
+      *    **Given** L'écran de configuration du profil utilisateur.
+      *    **When** L'utilisateur valide le formulaire.
+      *    **Then** Les champs doivent respecter les bornes de sécurité suivantes : *Âge [15 - 90 ans]*, *Taille [100 - 250 cm]*, *Poids [40 - 250 kg]*.
+      *    **And** Si une valeur est hors bornes, le bouton de validation reste désactivé et l'API rejette un code `400 Bad Request`.
+
+   *  **CA 2** : Persistance et isolation des données
+      *    **Given** Une requête valide `POST /api/profile`.
+      *    **When** L'API persiste les données dans le modèle `UserProfile` de la base SQLite.
+      *    **Then** Les données physiologiques doivent être strictement associées au `UserId` extrait du token JWT de la session courante.
+
+---
+
+## 🎯 US-03 : Définition d'Objectifs S.M.A.R.T (Should)
+
+**En tant qu'** utilisateur ayant configuré son profil  
+**Je veux** définir un objectif de poids et un rythme hebdomadaire de progression  
+**Afin de** générer automatiquement ma prescription calorique et mes macros sans mettre ma santé en danger.
+
+### 🛠️ Critères d'Acceptation (Gherkin)
+
+#### CA-03.1 : Garde-fou de sécurité métabolique (RM-GOAL-01)
+* **Given** Un utilisateur ciblant une perte de poids agressive.
+* **When** L'utilisateur tente de valider un rythme supérieur à **1% de son poids corporel par semaine** OU un déficit qui abaisse ses calories sous son **BMR de survie**.
+* **Then** Le système bloque la validation.
+* **And** Le système affiche une alerte contextuelle de sécurité et refuse de générer la feuille de route.
+
+#### CA-03.2 : Calcul instantané de la feuille de route
+* **Given** Un objectif physiologiquement validé par le système expert.
+* **When** L'enregistrement de l'objectif est confirmé en base de données.
+* **Then** Le système calcule instantanément et affiche sur le Dashboard les valeurs cibles de la phase.
+* **And** Ces valeurs incluent le **TDEE dynamique**, les **calories cibles journalières**, et la répartition des **macro-nutriments** (RM-MAC-01).
+
+---
+
+## 📉 US-04 : Suivi des Progrès & Journal Quotidien (Should)
+
+**En tant qu'** utilisateur engagé dans son programme  
+**Je veux** consigner chaque jour mon poids réel, mes apports caloriques et mes pas  
+**Afin de** visualiser ma trajectoire de progression et permettre au moteur de rattrapage de s'activer en cas d'écart.
+
+### 🛠️ Critères d'Acceptation (Gherkin)
+
+#### CA-04.1 : Règle d'unicité du journal quotidien
+* **Given** Un utilisateur qui a déjà soumis son journal pour le jour J.
+* **When** Il tente d'accéder à nouveau au formulaire de saisie pour la même date.
+* **Then** Le système passe le formulaire en mode édition (`PUT`) au lieu d'une création (`POST`).
+* **And** Cela empêche l'apparition de doublons chronologiques en base SQLite.
+
+#### CA-04.2 : Déclenchement de l'Insight de Trajectoire
+* **Given** Un historique de saisies sur les 3 derniers jours présentant un écart moyen de plus de **15%** par rapport au déficit planifié.
+* **When** L'utilisateur charge son Dashboard Angular.
+* **Then** Le Bloc 3 (Insights) doit afficher une notification dynamique signalant l'activation imminente du protocole de rattrapage (RM-COR-01).
      
