@@ -127,15 +127,15 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
         * **When** Il clique sur le lien ➕ Ajouter l'exercice.
         * **Then** Le lien disparaît pour laisser place aux champs de sélection de la séance (liée au programme) et aux saisies d'heures (entrée/sortie).
    *   **CA 3.2** : Ajout de Cardio (LISS)
-        * **Given**  Un utilisateur affichant la section "Cardio".
-        * **When** Il clique sur le lien ➕ Ajouter du cardio (LISS).
-        * **Then** Le système affiche un champ texte pour le type de cardio (ex: Tapis, Vélo) et un champ numérique pour la durée (minutes).
+       * **Given**  Un utilisateur affichant la section "Cardio".
+       * **When** Il clique sur le lien ➕ Ajouter du cardio (LISS).
+       * **Then** Le système affiche un champ texte pour le type de cardio (ex: Tapis, Vélo) et un champ numérique pour la durée (minutes).
    *   **CA 3.3** : Ajout de Repas (Jeûne Intermittent)
-        * **Given**  Un utilisateur affichant la section "Jeûne Intermittent".
-        * **When** Il clique sur le lien ➕ Ajouter un repas.
-        * **Then** Le système incrémente le compteur de repas et, s'il s'agit du premier ou du dernier repas de la journée, met à jour dynamiquement les sélecteurs d'horaires correspondants.
-    *   **CA 4** : Déclenchement de l'Insight de Trajectoire (Lien US-04)
-        * **Given**  Un historique de journaux validés sur les 3 derniers jours présentant un écart calorique/activité moyen de plus de 15% par rapport au plan initial.
-        * **When** L'utilisateur valide son journal ou charge son Dashboard.
-        * **Then** Un encadré d'alerte orange s'affiche dans la zone des Insights pour annoncer : "⚠️ Écart constaté. Le moteur de correction de trajectoire ajustera vos cibles lors de la prochaine synchronisation hebdomadaire."
+       * **Given**  Un utilisateur affichant la section "Jeûne Intermittent".
+       * **When** Il clique sur le lien ➕ Ajouter un repas.
+       * **Then** Le système incrémente le compteur de repas et, s'il s'agit du premier ou du dernier repas de la journée, met à jour dynamiquement les sélecteurs d'horaires correspondants.
+   *   **CA 4** : Déclenchement de l'Insight de Trajectoire (Lien US-04)
+       * **Given**  Un historique de journaux validés sur les 3 derniers jours présentant un écart calorique/activité moyen de plus de 15% par rapport au plan initial.
+       * **When** L'utilisateur valide son journal ou charge son Dashboard.
+       * **Then** Un encadré d'alerte orange s'affiche dans la zone des Insights pour annoncer : "⚠️ Écart constaté. Le moteur de correction de trajectoire ajustera vos cibles lors de la prochaine synchronisation hebdomadaire."
      
