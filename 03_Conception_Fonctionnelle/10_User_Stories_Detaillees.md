@@ -106,17 +106,36 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
 ---
 
 ## US-09 : Suivi des Progrès & Journal Quotidien (Should)
-**Priorité :** Should-have | **Estimation :** 5 SP
+**Priorité :** Should-have | **Estimation :** 8 SP (Estimation augmentée à cause de la complexité des calculs de durées et des nouvelles sections)
 
-*   **Énoncé :** En tant qu'utilisateur engagé dans son programme, Je veux consigner chaque jour mon poids réel, mes apports caloriques et mes pas,Afin de visualiser ma trajectoire de progression et permettre au moteur de rattrapage de s'activer en cas d'écart.
+*   **Énoncé :** utilisateur engagé dans mon optimisation métabolique,Je veux disposer d'un journal quotidien unique, trié par date et navigable, pour consigner mes calories, macros, poids, pas, entraînements, fenêtres de jeûne et sommeil,Afin de centraliser toutes mes données vitales,       alimenter l'algorithme de trajectoire et suivre précisément l'évolution de mes progrès.
 *   **Critères d'Acceptation (CA) :**
-    *   **CA 1** : Règle d'unicité du journal quotidien
-        * **Given** Un utilisateur qui a déjà soumis son journal pour le jour J.
-        * **When** Il tente d'accéder à nouveau au formulaire de saisie pour la même date.
-        * **Then** Le système passe le formulaire en mode édition (`PUT`) au lieu d'une création (`POST`).
-        * **And** Cela empêche l'apparition de doublons chronologiques en base SQLite.
-    *   **CA 2** : Déclenchement de l'Insight de Trajectoire
-        * **Given**Un historique de saisies sur les 3 derniers jours présentant un écart moyen de plus de **15%** par rapport au déficit planifié.
-        * **When** L'utilisateur charge son Dashboard Angular.
-        * **Then** Le Bloc 3 (Insights) doit afficher une notification dynamique signalant l'activation imminente du protocole de rattrapage (RM-COR-01).
+    *   **CA 1** : Navigation temporelle et Unicité (Idempotence)
+        * **Given**  Un utilisateur connecté sur son Dashboard.
+        * **When** Il accède à la page /diary.
+        * **Then** Le système charge par défaut le journal de la date du jour.
+        * **And** Des boutons permettent de reculer ou d'avancer d'un jour, ou de choisir une date via un calendrier.
+        * **And** Si un journal existe déjà pour la date sélectionnée, le formulaire charge les données existantes en mode édition (PUT). Sinon, il affiche un formulaire vierge prêt à être créé (POST).
+    *   **CA 2** : Calculs automatisés des Fenêtres Circadiennes (Sommeil & Jeûne)
+        * **Given** Un utilisateur qui remplit ses sections Sommeil et Jeûne.
+        * **When** Il saisit l'heure de coucher (23h00) et de réveil (07h00), ainsi que l'heure du premier repas (12h00) et du dernier repas (20h00).
+        * **Then** Le système calcule et affiche dynamiquement :
+        * La durée totale du sommeil (Ex: 8 heures).
+        * La fenêtre d'alimentation (Ex: 8 heures) et en déduit la fenêtre de jeûne (Ex: 16 heures de jeûne).
+    *   **CA 3.1** : Ajout d'Exercice (Musculation)
+        * **Given**  Un utilisateur affichant la section "Musculation".
+        * **When** Il clique sur le lien ➕ Ajouter l'exercice.
+        * **Then** Le lien disparaît pour laisser place aux champs de sélection de la séance (liée au programme) et aux saisies d'heures (entrée/sortie).
+   *   **CA 3.2** : Ajout de Cardio (LISS)
+        * **Given**  Un utilisateur affichant la section "Cardio".
+        * **When** Il clique sur le lien ➕ Ajouter du cardio (LISS).
+        * **Then** Le système affiche un champ texte pour le type de cardio (ex: Tapis, Vélo) et un champ numérique pour la durée (minutes).
+   *   **CA 3.3** : Ajout de Repas (Jeûne Intermittent)
+        * **Given**  Un utilisateur affichant la section "Jeûne Intermittent".
+        * **When** Il clique sur le lien ➕ Ajouter un repas.
+        * **Then** Le système incrémente le compteur de repas et, s'il s'agit du premier ou du dernier repas de la journée, met à jour dynamiquement les sélecteurs d'horaires correspondants.
+    *   **CA 4** : Déclenchement de l'Insight de Trajectoire (Lien US-04)
+        * **Given**  Un historique de journaux validés sur les 3 derniers jours présentant un écart calorique/activité moyen de plus de 15% par rapport au plan initial.
+        * **When** L'utilisateur valide son journal ou charge son Dashboard.
+        * **Then** Un encadré d'alerte orange s'affiche dans la zone des Insights pour annoncer : "⚠️ Écart constaté. Le moteur de correction de trajectoire ajustera vos cibles lors de la prochaine synchronisation hebdomadaire."
      
