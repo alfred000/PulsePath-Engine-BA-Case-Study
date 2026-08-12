@@ -86,7 +86,7 @@ Permet à un utilisateur intermédiaire ou avancé de configurer une simulation 
 - L'utilisateur peut exporter la projection au format CSV ou sauvegarder ce scénario de planification dans son profil.
 
 ---
-# UC002 : Agrégation Automatique et Traitement de la Télémétrie Biométrique
+# 6. UC-05 : Agrégation Automatique et Traitement de la Télémétrie Biométrique
 
 ## 1. Description
 Permet à l'utilisateur de centraliser et d'automatiser la collecte de ses données métaboliques et biométriques à partir de son écosystème matériel (Balance connectée, Apple Health, MyFitnessPal, Garmin/Apple Watch). Le système analyse ces flux en continu pour mettre à jour la boucle thermodynamique de simulation et évaluer la récupération du système nerveux central (SNC). Un mécanisme de repli (fallback) manuel est disponible à tout moment en cas de défaillance des API tierces.
@@ -133,3 +133,4 @@ Permet à l'utilisateur de centraliser et d'automatiser la collecte de ses donn�
 | **UC-02** | Consultation Trajectoire | 🔴 Critique | Haute |
 | **UC-03** | Coach Insights | 🟠 Haute | Moyenne |
 | **UC-04** |  Simulation Dynamique | 🟠 Haute | Moyenne |
+| **UC-05** | Télémétrie Biométrique | 🔴 Critique | Basse |
