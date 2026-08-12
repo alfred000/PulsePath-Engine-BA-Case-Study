@@ -86,7 +86,46 @@ Permet à un utilisateur intermédiaire ou avancé de configurer une simulation 
 - L'utilisateur peut exporter la projection au format CSV ou sauvegarder ce scénario de planification dans son profil.
 
 ---
-## 6. Matrice de Priorité des Cas d'Utilisation
+# UC002 : Agrégation Automatique et Traitement de la Télémétrie Biométrique
+
+## 1. Description
+Permet à l'utilisateur de centraliser et d'automatiser la collecte de ses données métaboliques et biométriques à partir de son écosystème matériel (Balance connectée, Apple Health, MyFitnessPal, Garmin/Apple Watch). Le système analyse ces flux en continu pour mettre à jour la boucle thermodynamique de simulation et évaluer la récupération du système nerveux central (SNC). Un mécanisme de repli (fallback) manuel est disponible à tout moment en cas de défaillance des API tierces.
+
+## 2. Acteurs
+- **Acteur Principal :** Utilisateur Authentifié (Athlète)
+- **Acteurs Secondaires (Systèmes) :** 
+  - API Cloud/SDK Balance (Renpho / Withings)
+  - API Nutrition (MyFitnessPal Core API)
+  - Passerelle d'Activité mobile (Apple HealthKit / Garmin Connect API)
+
+## 3. Préconditions
+- L'utilisateur possède des jetons d'autorisation OAuth2 valides pour chaque service externe connecté.
+- L'application mobile PulsePath dispose des autorisations système de lecture sur Apple HealthKit (iOS).
+
+## 4. Flux Principal (Scénario Nominal : Synchronisation Automatique)
+1. L'application déclenche une tâche d'arrière-plan synchrone ou asynchrone (Web Job / Background Service) à intervalles réguliers.
+2. **Collecte Biométrique :** Le système interroge l'API Cloud de la balance connectée et extrait le vecteur brut des 13 métriques corporelles.
+3. **Collecte Nutritionnelle :** Le système interroge l'API MyFitnessPal et extrait les calories totales consommées ainsi que la structure exacte des macro-nutriments (Protéines, Glucides, Lipides) du journal alimentaire.
+4. **Collecte de l'Activité & Récupération :** Le système extrait le nombre de pas quotidiens via Apple Health et extrait la Fréquence Cardiaque au Repos (RHR) ainsi que la Variabilité de la Fréquence Cardiaque (HRV) depuis Garmin/Apple Watch.
+5. Le système valide la qualité des données (absence de doublons, valeurs aberrantes).
+6. Le système recalcule la tendance lissée (Rolling Average) de l'utilisateur et actualise automatiquement les prévisions de sa trajectoire de masse grasse.
+
+## 5. Flux Alternatifs (Exceptions et Repli Manuel)
+- **A1 : Échec d'Authentification / Jeton OAuth2 Expiré**
+  - Le système suspend la synchronisation automatique du service concerné.
+  - Le système lève une alerte discrète dans l'interface Angular : *"Action requise : Reconnectez votre compte [Nom du Service] pour éviter l'interruption des données."*
+- **A2 : Mode de Repli Manuel Intégral (Fallback)**
+  - Si l'utilisateur refuse de lier des API tierces ou si un service tiers est indisponible (Panne d'API MyFitnessPal ou Renpho).
+  - L'utilisateur accède au formulaire de saisie manuelle.
+  - L'utilisateur saisit manuellement son poids, ses calories du jour, ses macros et ses pas.
+  - Le système accepte les entrées manuelles, les marque avec le tag `Source: Manual` dans la base de données, et force l'exécution de la boucle de calcul.
+
+## 6. Postconditions
+- La base de données temporelle (Time-Series) est alimentée avec les métriques biométriques du jour.
+- Les indicateurs de fatigue du SNC (HRV/RHR) sont mis à disposition du tableau de bord d'analyse.
+
+---
+## 7. Matrice de Priorité des Cas d'Utilisation
 
 | ID | Nom du Cas d'Utilisation | Importance Métier | Complexité |
 | :--- | :--- | :--- | :--- |
