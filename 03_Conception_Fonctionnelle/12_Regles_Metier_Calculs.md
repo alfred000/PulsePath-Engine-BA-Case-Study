@@ -137,6 +137,117 @@ Cet algorithme prescriptif sous contraintes s'active en cas de déviation pour r
 ### Étape C : Conversion de l'Effort Résiduel en Activité (Pas / LISS)
 Le système utilise un modèle prédictif linéaire lié au poids de l'utilisateur (1 000 pas brûlent environ `Poids_Actuel * 0.5` kcal) :
 
+---
+# 14. RM-STD-01 : Simulateur de Trajectoire de Composition Corporelle
+
+Cet algorithme centralise les règles de gestion (RG), les formules mathématiques et les algorithmes de calcul appliqués par le moteur PulsePath Engine pour projeter l'évolution de la composition corporelle à partir des données d'une balance intelligente.
+
+## I. Règles de Gestion (Business Rules)
+
+### RG001 : Priorisation de la Masse Maigre Sèche (LBM)
+Le calcul de la dépense énergétique de base (BMR) ne doit jamais s'appuyer sur le poids total de l'utilisateur, mais exclusivement sur sa masse non grasse (`fatFreeBodyWeight`). Cela garantit une précision accrue chez les pratiquants de musculation de niveau intermédiaire à avancé.
+
+### RG002 : Limite Absolue de Mobilisation Adipeuse (Seuil d'Alpert)
+Le corps humain ne peut pas extraire plus de **69,2 kcal par kilogramme de graisse pure et par jour**. Tout déficit calorique quotidien qui dépasse ce seuil physiologique force le système à détruire du tissu musculaire pour combler le manque énergétique, indépendamment de la quantité de protéines consommée.
+
+### RG003 : Déclenchement de l'Alerte de Catabolisme Musculaire
+Si le déficit énergétique programmé par l'utilisateur ($| \Delta E |$) est supérieur au Transfert Maximal de la Masse Grasse ($MFT$), le système doit :
+1. Lever une alerte de sécurité visuelle sur l'interface (Code couleur : Rouge/Orange).
+2. Calculer le taux de dégradation musculaire quotidien et l'imputer sur la métrique `muscleMass`.
+
+### RG004 : Ajustement Dynamique Restreint de la Masse Osseuse
+La masse osseuse (`boneMass`) est considérée comme une constante structurelle à l'échelle de la simulation (durée de 12 à 20 semaines). Elle ne subit aucune fluctuation liée au déficit ou au surplus calorique.
+
+## II. Formules Mathématiques et Algorithmes de Calcul
+
+### 1. Variables Initiales (Inputs de la Balance Intelligente)
+Les calculs s'exécutent à chaque jour $d$ de la simulation à partir des états du jour précédant $d-1$.
+- $W_{0}$ = Poids total initial (`bodyWeightKg`)
+- $BF_{0}$ = Pourcentage de masse grasse initial (`bodyFatPercentage`)
+- $H$ = Taille en mètres (ex: $1.63$)
+- $Age$ = Âge chronologique en années
+
+### 2. Le Bloc Énergétique (Calculs Quotidiens)
+
+#### Étape A : Calcul de la Masse Grasse ($FM$) et de la Masse Maigre ($FFM$)
+$$FM_d = W_d \times \left( \frac{BF_d}{100} \right)$$
+$$FFM_d = W_d - FM_d$$
+
+#### Étape B : Calcul du Métabolisme de Base (Katch-McArdle)
+$$BMR_d = 370 + (21.6 \times FFM_d)$$
+
+#### Étape C : Calcul de la Dépense Énergétique Totale (TDEE)
+$$TDEE_d = BMR_d \times \text{Multiplicateur Activité}$$
+
+#### Étape D : Calcul de la Balance Énergétique ($\Delta E_d$)
+$$\Delta E_d = \text{Intake Calories (Saisie)} - TDEE_d$$
+
+### 3. L'Algorithme de Partitionnement des Tissus (Boucle Temporelle)
+
+Pour chaque jour $d$ allant de $1$ à `SimulationLengthDays` :
+
+1. **Calcul du Seuil Limite d'Alpert ($MFT$)** :
+   $$MFT_d = FM_{d-1} \times 69.2$$
+
+2. **Évaluation du Déficit (Si $\Delta E_d < 0$)** :
+   - **Cas 1 : Déficit Sécurisé ($| \Delta E_d | \le MFT_d$)**
+     - L'intégralité du déficit est puisée dans les graisses.
+     - $\text{Actual Fat Transfer (ATF)}_d = | \Delta E_d |$
+     - $\text{Muscle Catabolism}_d = 0$
+   - **Cas 2 : Déficit Excessif ($| \Delta E_d | > MFT_d$)**
+     - Le gras fournit son maximum, le muscle fournit le reste.
+     - $\text{Actual Fat Transfer (ATF)}_d = MFT_d$
+     - $\text{Residual Deficit}_d = | \Delta E_d | - MFT_d$
+     - $\text{Muscle Catabolism (kcal)}_d = \text{Residual Deficit}_d$
+
+3. **Mise à jour des Masses Tissulaires** :
+   $$\Delta FM_d = - \frac{\text{ATF}_d}{9440} \quad \text{(1 kg de tissu adipeux = 9440 kcal structurées)}$$
+   $$\Delta MM_d = - \frac{\text{Muscle Catabolism (kcal)}_d}{4300} \quad \text{(1 kg de tissu musculaire = 4300 kcal structurées)}$$
+
+## III. Matrice Évolutive des 13 Métriques de la Balance
+
+À la fin de chaque journée de simulation $d$, les propriétés du vecteur de composition corporelle sont recalculées de manière récursive :
+
+| Code Métrique | Libellé Métrique | Formule Mathématique de Résolution Spécifique |
+| :--- | :--- | :--- |
+| `bodyWeightKg` | Poids Global | $W_d = FM_{d-1} + \Delta FM_d + FFM_{d-1} + \Delta MM_d$ |
+| `bodyMassIndexBMI` | Indice de Masse Corporelle | $BMI_d = \frac{W_d}{H^2}$ |
+| `bodyFatPercentage` | Taux de Masse Grasse | $BF_d = \left( \frac{FM_d}{W_d} \right) \times 100$ |
+| `fatFreeBodyWeight` | Masse Hors Graisse | $FFM_d = W_d - FM_d$ |
+| `muscleMass` | Masse Musculaire Totale | $MM_d = FFM_d \times 0.78$ |
+| `skeletalMusclePercentage` | % Muscle Squelettique | $SMP_d = \left( \frac{MM_d}{W_d} \right) \times 100$ |
+| `bodyWaterPercentage` | Pourcentage d'Eau Totale | $BWP_d = \frac{(FFM_d \times 0.73) + (FM_d \times 0.10)}{W_d} \times 100$ |
+| `boneMass` | Masse Osseuse | $BM_d = BM_0 \quad \text{(Valeur Constante)}$ |
+| `proteinPercentage` | Pourcentage de Protéines | $PP_d = \left( \frac{FFM_d \times 0.19}{W_d} \right) \times 100$ |
+| `basalMetabolicRateBMR`| Métabolisme de Base | $BMR_d = 370 + (21.6 \times FFM_d)$ |
+| `subcutaneousFat` | Graisse Sous-Cutanée | $SF_d = BF_d \times 0.88$ |
+| `visceralFat` | Indice de Graisse Viscérale | $VF_d = \text{Arrondir}\left( FM_d \times 0.45 \right)$ |
+| `metabolicAge` | Âge Métabolique | $MA_d = Age + \text{Limiter}\left((BMI_d - 22.0) \times 0.5, -5, 15\right)$ |
+
+## IV. Règles de Distribution des Macro-nutriments (Profils)
+
+L'ajustement des macro-nutriments s'effectue sur la base des calories cibles configurées (`Intake`), en respectant le poids du jour $W_d$.
+
+1. **Profil Hyperprotéiné (Recommandé en déficit)**
+   - Protéines : $W_d \times 2,2 \text{ g}$
+   - Lipides : $(\text{Intake} \times 0,25) / 9 \text{ g}$
+   - Glucides : $(\text{Intake} - (\text{Protéines} \times 4) - (\text{Lipides} \times 9)) / 4 \text{ g}$
+
+2. **Profil Équilibré**
+   - Protéines : $W_d \times 1,8 \text{ g}$
+   - Lipides : $(\text{Intake} \times 0,30) / 9 \text{ g}$
+   - Glucides : $(\text{Intake} - (\text{Protéines} \times 4) - (\text{Lipides} \times 9)) / 4 \text{ g}$
+
+3. **Profil Low Fat**
+   - Protéines : $W_d \times 1,8 \text{ g}$
+   - Lipides : Plancher fixe de $40 \text{ g}$
+   - Glucides : Enveloppe budgétaire restante
+
+4. **Profil Low Carb**
+   - Protéines : $W_d \times 2,0 \text{ g}$
+   - Glucides : Plancher fixe de $75 \text{ g}$
+   - Lipides : Enveloppe budgétaire restante
+
 *   `Calories_Par_1000_Pas = Poids_Actuel * 0.5`
 *   `Pas_Supplementaires_Requis = (Effort_Residuel / Calories_Par_1000_Pas) * 1000`
 *   `Nouvelle_Cible_Pas = Objectif_Pas_Initial + Pas_Supplementaires_Requis`
