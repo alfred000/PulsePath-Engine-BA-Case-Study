@@ -148,14 +148,15 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
         * **Given** que je suis sur l'écran du planificateur.
         * **When** je saisis un apport calorique ou que je modifie mon niveau d'activité à l'aide des curseurs.
         * **Then** l'interface doit instantanément mettre à jour le calcul de mon TDEE théorique basé sur ma masse maigre réelle (Formule de Katch-McArdle).
-   *   **CA 2** : Calcul du Seuil Limite d'Alpert (Maximum Fat Loss)
+    *   **CA 2** : Calcul du Seuil Limite d'Alpert (Maximum Fat Loss)
         * **Given** mes données initiales de balance connectée (Poids : 76 kg, Masse Grasse : 25%).
         * **When** le moteur traite le Jour 1 de la simulation.
         * **Then** il doit calculer informatiquement :
   - La Masse Grasse Totale (19.0 kg).
   - Le Transfert Maximal depuis le gras par jour ($19.0 \times 69,2 = 1314,8\text{ kcal/jour}$).
   - La perte de gras maximale sécurisée par semaine ($\approx 0.97\text{ kg/semaine}$).
-   *   **CA 3** : Matrice de Résolution des 13 Métriques Connectées
+
+    *   **CA 3** : Matrice de Résolution des 13 Métriques Connectées
         * **Given** une simulation validée sur 140 jours.
         * **When** il consulte le tableau de projection ou le graphique.
         * **Then** il doit voir l'évolution synchronisée et cohérente des 13 métriques requises :
@@ -172,7 +173,8 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
   11. Graisse sous-cutanée (`subcutaneousFat`)
   12. Graisse viscérale (`visceralFat`)
   13. Âge métabolique (`metabolicAge`)
-    *   **CA 4** : Alertes de Sécurité Métabolique
+
+   *   **CA 4** : Alertes de Sécurité Métabolique
         * **Given** un apport cible trop bas (ex: 1200 kcal/jour provoquant un déficit de 1500 kcal).
         * **When** le déficit dépasse le Transfert Maximal (1314.8 kcal).
         * **Then** l'application doit afficher un indicateur de couleur rouge sur la ligne de temps indiquant la bascule vers le catabolisme musculaire.
