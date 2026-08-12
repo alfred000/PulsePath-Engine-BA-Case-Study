@@ -180,4 +180,33 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
         * **Then** l'application doit afficher un indicateur de couleur rouge sur la ligne de temps indiquant la bascule vers le catabolisme musculaire.
 
 ---
+
+## US-11 : Hub de Télémétrie et Agrégation Biométrique Avancée 
+**Priorité :** Should-have | **Estimation :** 5 SP
+
+*   **Énoncé :**  En tant que Pratiquant de musculation analytique et rigoureux, Je veux Connecter mes applications de suivi (Apple Health, MyFitnessPal) et mes équipements (Balance Renpho, Montre connectée) à un hub centralisé  , De sorte que Mes 13 métriques corporelles, mes calories réelles, mes pas et mes marqueurs de récupération nerveuse (HRV/RHR) soient synchronisés automatiquement sans saisie manuelle fastidieuse.
+*   **Critères d'Acceptation (CA) :**
+    *   **CA 1** : Intégration Cloud/SDK Balance Connectée
+        *   **Given** que j'ai lié mon compte de balance connectée (ex: Renpho) via OAuth2.
+        *   **When** je monte sur ma balance le matin et que les données atteignent leur cloud.
+        *   **Then** le backend doit intercepter ou interroger ce flux pour extraire sans perte les 13 métriques de composition corporelle de mon profil.
+    *   **CA 2** : Extraction du Journal Alimentaire (MyFitnessPal)
+        *   **Given** que je consigne mes repas dans MyFitnessPal.
+        *   **When** le processus de synchronisation s'exécute.
+        *   **Then** le système doit récupérer l'apport calorique total accumulé ainsi que le grammage précis des macronutriments (Protéines, Glucides, Lipides) pour valider mon adhérence aux cibles de mon profil (ex: Hyperprotéiné).      
+    *   **CA 3** : Suivi de l'Activité Terrestre (Pedomètre / Apple Health)
+        *   **Given** que je marche tout au long de la journée avec mon iPhone.
+        *   **When** j'ouvre l'application Angular PulsePath.
+        *   **Then** le plugin HealthKit frontend (ou le relais API) doit pousser le total de pas cumulés au backend pour recalculer dynamiquement ma dépense énergétique non liée à l'exercice (NEAT).
+    *   **CA 4** : Monitoring de la Récupération du Système Nerveux Central (SNC)
+        *    **Given** que je porte une montre Garmin ou une Apple Watch durant mon sommeil.
+        *    **When** les indicateurs de Fréquence Cardiaque au Repos (RHR) et de Variabilité de la Fréquence Cardiaque (HRV) sont synchronisés.
+        *    **Then** l'application doit générer un score de récupération nerveuse et corréler une baisse anormale de la HRV avec une alerte de fatigue, suggérant d'ajuster l'intensité du volume d'entraînement (Day 1 à Day 5).
+    *   **CA 5** : Algorithme de Repli Temporel et Saisie Manuelle (Fallback)
+         *    **Given** que l'API d'un fournisseur tiers est indisponible ou non connectée.
+         *    **When** je clique sur le bouton "Saisie Manuelle" de mon tableau de bord.
+         *    **Then** l'interface doit me présenter un formulaire complet me permettant d'entrer manuellement mon poids, mes pas et mes macros du jour. Les calculs thermodynamiques du moteur d'Alpert doivent s'exécuter normalement sur la base de ces données saisies.
+
+---
+
      
