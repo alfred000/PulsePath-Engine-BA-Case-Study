@@ -138,4 +138,44 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
        * **Given**  Un historique de journaux validés sur les 3 derniers jours présentant un écart calorique/activité moyen de plus de 15% par rapport au plan initial.
        * **When** L'utilisateur valide son journal ou charge son Dashboard.
        * **Then** Un encadré d'alerte orange s'affiche dans la zone des Insights pour annoncer : "⚠️ Écart constaté. Le moteur de correction de trajectoire ajustera vos cibles lors de la prochaine synchronisation hebdomadaire."
+---
+## US-10 : Prévision et Optimisation de la Perte de Masse Grasse (Should)
+**Priorité :** Should-have | **Estimation :** 5 SP
+
+*   **Énoncé :** En tant que Pratiquant de musculation de niveau intermédiaire, Saisir mes calories cibles ainsi que mes données de balance connectée afin de générer une simulation précise de ma composition corporelle sur le long terme, En sorte que Je puisse identifier visuellement mon apport calorique optimal pour maximiser la perte de tissu adipeux tout en protégeant l'intégralité de ma masse musculaire.
+*   **Critères d'Acceptation (CA) :**
+    *   **CA 1** : Interface de configuration de l'intervention
+        * **Given** que je suis sur l'écran du planificateur.
+        * **When** je saisis un apport calorique ou que je modifie mon niveau d'activité à l'aide des curseurs.
+        * **Then** l'interface doit instantanément mettre à jour le calcul de mon TDEE théorique basé sur ma masse maigre réelle (Formule de Katch-McArdle).
+   *   **CA 2** : Calcul du Seuil Limite d'Alpert (Maximum Fat Loss)
+        * **Given** mes données initiales de balance connectée (Poids : 76 kg, Masse Grasse : 25%).
+        * **When** le moteur traite le Jour 1 de la simulation.
+        * **Then** il doit calculer informatiquement :
+  - La Masse Grasse Totale (19.0 kg).
+  - Le Transfert Maximal depuis le gras par jour ($19.0 \times 69,2 = 1314,8\text{ kcal/jour}$).
+  - La perte de gras maximale sécurisée par semaine ($\approx 0.97\text{ kg/semaine}$).
+   *   **CA 3** : Matrice de Résolution des 13 Métriques Connectées
+        * **Given** une simulation validée sur 140 jours.
+        * **When** il consulte le tableau de projection ou le graphique.
+        * **Then** il doit voir l'évolution synchronisée et cohérente des 13 métriques requises :
+  1. Poids total (`bodyWeightKg`)
+  2. IMC (`bodyMassIndexBMI`)
+  3. Pourcentage de graisse (`bodyFatPercentage`)
+  4. Pourcentage d'eau (`bodyWaterPercentage`) - *qui doit augmenter à mesure que le gras diminue*
+  5. Pourcentage de muscle squelettique (`skeletalMusclePercentage`)
+  6. Poids corps sans graisse (`fatFreeBodyWeight`)
+  7. Masse musculaire (`muscleMass`)
+  8. Masse osseuse (`boneMass`) - *valeur stable*
+  9. Pourcentage de protéines (`proteinPercentage`)
+  10. Métabolisme de base (`basalMetabolicRateBMR`) - *qui s'adapte à la baisse du poids total*
+  11. Graisse sous-cutanée (`subcutaneousFat`)
+  12. Graisse viscérale (`visceralFat`)
+  13. Âge métabolique (`metabolicAge`)
+    *   **CA 4** : Alertes de Sécurité Métabolique
+        * **Given** un apport cible trop bas (ex: 1200 kcal/jour provoquant un déficit de 1500 kcal).
+        * **When** le déficit dépasse le Transfert Maximal (1314.8 kcal).
+        * **Then** l'application doit afficher un indicateur de couleur rouge sur la ligne de temps indiquant la bascule vers le catabolisme musculaire.
+
+---
      
