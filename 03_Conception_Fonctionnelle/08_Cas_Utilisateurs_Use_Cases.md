@@ -251,3 +251,4 @@ Permet à l'utilisateur de configurer un plan d'apport calorique précis en choi
 | **UC-05** | Télémétrie Biométrique | 🔴 Critique | Basse |
 | **UC-06** | Menus Nutritionnels | 🔴 Critique | Basse |
 | **UC-07** | Entraînement Personnalisées | 🔴 Critique | Basse |
+| **UC-08** | Planification des Calories | 🔴 Critique | Basse |
