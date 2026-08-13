@@ -178,7 +178,6 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
         * **Given** un apport cible trop bas (ex: 1200 kcal/jour provoquant un déficit de 1500 kcal).
         * **When** le déficit dépasse le Transfert Maximal (1314.8 kcal).
         * **Then** l'application doit afficher un indicateur de couleur rouge sur la ligne de temps indiquant la bascule vers le catabolisme musculaire.
-
 ---
 
 ## US-11 : Hub de Télémétrie et Agrégation Biométrique Avancée 
@@ -206,7 +205,36 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
          *    **Given** que l'API d'un fournisseur tiers est indisponible ou non connectée.
          *    **When** je clique sur le bouton "Saisie Manuelle" de mon tableau de bord.
          *    **Then** l'interface doit me présenter un formulaire complet me permettant d'entrer manuellement mon poids, mes pas et mes macros du jour. Les calculs thermodynamiques du moteur d'Alpert doivent s'exécuter normalement sur la base de ces données saisies.
+---
+
+## US-12 : Planificateur de Repas Automatisé et Liste de Courses Dynamique
+**Priorité :** Should-have | **Estimation :** 5 SP
+
+*   **Énoncé :**  En tant que Pratiquant de musculation devant concilier sa nutrition avec sa vie de famille, Je veux Paramétrer un planificateur de repas hebdomadaire en spécifiant mes restrictions, mes portions, mon nombre de personnes à table et mes aliments favoris, De sorte que Je puisse générer un menu sur 7 jours parfaitement aligné avec mes macros cibles, interchanger les repas qui ne me conviennent pas et obtenir ma liste de courses triée par rayon.
+*   **Critères d'Acceptation (CA) :**
+    *   **CA 1** : Configuration et Grille de Préférences Réelles
+        *   **Given** que je configure un nouveau plan de repas.
+        *   **When** je saisis les détails logistiques (ex: 4 repas par jour, portions pour 3 personnes, temps de cuisine maximum de 30 minutes).
+        *   **Then** le système doit exclure de sa recherche toutes les recettes nécessitant un temps de préparation supérieur à 30 minutes.
+    *   **CA 2** : Algorithme d'Alignement Macro-nutritionnel Automatique
+        *   **Given** mes cibles caloriques quotidiennes (ex: 1880 kcal, 152g Protéines).
+        *   **When** la génération automatique se déclenche.
+        *   **Then** la somme des calories et des macros de l'ensemble des repas proposés sur une journée de calendrier doit correspondre à mes objectifs avec une marge d'erreur stricte de $\pm 3\%$.      
+    *   **CA 3** : Moteur de Remplacement (Swap) Isoménu
+        *   **Given** un repas généré automatiquement dans mon calendrier (ex: Poulet / Riz / Brocoli).
+        *   **When** je clique sur l'option "Échanger le repas".
+        *   **Then** le système doit me proposer uniquement des alternatives culinaires respectant les filtres de mon type de régime (ex: Végétarien) tout en maintenant les équilibres en protéines, glucides et lipides de la case horaire initiale.
+    *   **CA 4** : Consolidation Intelligente de la Liste de Courses
+        *    **Given** un menu de 7 jours validé pour 3 personnes.
+        *    **When** j'affiche ma liste de courses.
+        *    **Then** le système doit regrouper les ingrédients identiques (ex: cumuler 450g de riz d'une recette A et 300g de riz d'une recette B pour afficher "Riz : 750g") et ordonner l'affichage selon des rayons logiques (Boucherie, Épicerie, Fruits & Légumes, Produits Laitiers).
+    *   **CA 5** : CRUD de Gestion des Recettes, Aliments et Repas
+         *    **Given** que je souhaite enregistrer mes propres créations culinaires.
+         *    **When** j'accède à l'espace de gestion.
+         *    **Then** je dois pouvoir créer, lire, mettre à jour ou supprimer (CRUD) des ingrédients isolés, des Recettes complexes (combinaisons d'ingrédients avec instructions de préparation) et des Repas types.
 
 ---
+
+
 
      
