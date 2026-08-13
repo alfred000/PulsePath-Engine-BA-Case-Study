@@ -419,3 +419,20 @@ $$\text{TDEE}_{n} = \text{BMR}_{n} \times 1.55$$
 | Semaine 2 | 71.31 kg | 2527 kcal | 2159 kcal |
 | ... | ... | ... | ... |
 | Semaine 18 (Final) | 65.80 kg | 2442 kcal | 2159 kcal |
+
+## IV. Algorithme de Résolution Hybride : Mode Target Body Fat (Alpert Integration)
+
+Lorsque l'utilisateur choisit le ciblage par taux de masse grasse, les calculs de l'apport énergétique quotidien (`Intake`) abandonnent la linéarité des 7 700 kcal et se synchronisent sur l'état dynamique du tissu adipeux de la semaine en cours :
+
+1. **Calcul du Poids Final Théorique ($W_{\text{cible}}$)** :
+   $$FFM_{\text{initial}} = W_{\text{actuel}} \times \left(1 - \frac{BF_{\text{actuel}}}{100}\right)$$
+   $$W_{\text{cible}} = \frac{FFM_{\text{initial}}}{1 - \left(\frac{\text{targetBodyFatPercentage}}{100}\right)}$$
+
+2. **Génération Récursive Non-Linéaire de la Trajectoire (Boucle de calcul du Planner)** :
+   Pour chaque semaine de projection $n$, le déficit maximal autorisé s'adapte à la raréfaction des stocks de gras :
+   $$FM_n = W_n \times \left(\frac{BF_n}{100}\right)$$
+   $$\text{Déficit Autorisé Quotidien}_n = FM_n \times 69.2 \text{ kcal/jour}$$
+   $$\text{Apport Recommandé Cible}_n = TDEE_n - \text{Déficit Autorisé Quotidien}_n$$
+   $$\text{Perte de poids pour la semaine } n = \frac{\text{Déficit Autorisé Quotidien}_n \times 7 \text{ jours}}{9440 \text{ kcal/kg}}$$
+
+La simulation s'arrête automatiquement et valide l'échéance temporelle finale (Deadline) dès que $W_n \le W_{\text{cible}}$.
