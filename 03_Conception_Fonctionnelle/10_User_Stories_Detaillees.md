@@ -234,6 +234,29 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
          *    **Then** je dois pouvoir créer, lire, mettre à jour ou supprimer (CRUD) des ingrédients isolés, des Recettes complexes (combinaisons d'ingrédients avec instructions de préparation) et des Repas types.
 
 ---
+## US-13 : Journal d'Entraînement Connecté et Analyse Mathématique de la Force
+**Priorité :** Should-have | **Estimation :** 5 SP
+
+*   **Énoncé :**  En tant que Pratiquant de musculation rigoureux adepte de la surcharge progressive, Générer mes splits d'entraînement, enregistrer mes séries avec leur typographie exacte (Drop sets, Échec) et analyser mes graphiques de progression de force, De sorte que Je puisse automatiser le chargement de mes barres, respecter mes temps de repos et ne jamais régresser d'une séance à l'autre dans mon déficit calorique.
+*   **Critères d'Acceptation (CA) :**
+    *   **CA 1** : Pré-remplissage Intelligent et Surcharge Progressive
+        *   **Given** que je démarre mon entraînement "Day 1: Upper Body".
+        *   **When** le premier exercice (Développé Couché Halteres / Incline Press 👑) s'affiche à l'écran.
+        *   **Then** les champs d'entrée de texte des séries doivent afficher en filigrane (placeholder gris) les valeurs exactes validées lors de ma dernière occurrence de cet exercice (ex: "40 kg x 8").
+    *   **CA 2** : Typage des Séries et Ergonomie Intra-Workout
+        *   **Given** que je consigne une série lourde menée à l'épuisement total.
+        *   **When** je valide la série.
+        *   **Then** je dois pouvoir basculer l'état de la série sur le tag `Failure` (Échec). Le système doit enregistrer cette variable pour moduler le score de fatigue de ma carte thermique musculaire.      
+    *   **CA 3** : Automatisation des Alertes de Repos (Rest Timer)
+        *   **Given** que je coche une série effective sur le Squat (Temps de repos cible configuré : 180 secondes).
+        *   **When** la série est marquée comme complétée.
+        *   **Then** un widget flottant doit immédiatement lancer un décompte de 3:00 minutes avec une option d'alerte par vibration ou notification push à l'expiration du temps.
+    *   **CA 4** : Tableau de Bord Analytique et Estimation du 1RM
+        *    **Given** que j'ai enregistré plusieurs séances de Soulevé de Terre (Deadlift).
+        *    **When** je consulte les graphiques de performance de cet exercice.
+        *    **Then** le système doit tracer une courbe d'évolution temporelle de mon Volume Total de travail (Poids x Reps x Séries) ainsi que mon 1RM estimé calculé via la formule d'Epley.
+
+---
 
 
 
