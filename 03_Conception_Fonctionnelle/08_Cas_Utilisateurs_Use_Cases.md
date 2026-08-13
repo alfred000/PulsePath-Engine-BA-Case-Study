@@ -204,7 +204,7 @@ Permet à l'utilisateur de concevoir des routines d'entraînement personnalisée
 # UC-08 : Planification Avancée des Calories et Modélisation de Trajectoire de Poids
 
 ## 1. Description
-Permet à l'utilisateur de configurer un plan d'apport calorique précis en choisissant parmi trois modes de ciblage (par date limite, par apport fixe ou par maintien). Le système s'appuie sur une constante de 7 700 kcal par kilogramme de variation corporelle pour projeter de manière linéaire et dynamique la trajectoire du poids semaine par semaine.
+Permet à l'utilisateur de configurer un plan d'apport calorique précis en choisissant parmi deux configurations d'objectifs (par poids brut cible OU par taux de masse grasse cible) et trois modes d'échéances. Le système s'appuie sur une constante de 7 700 kcal par kg pour les pertes de poids classiques, ou passe automatiquement en mode de calcul non-linéaire basé sur le Principe de Transfert Maximal d'Alpert (69,2 kcal/kg de gras/jour) lorsque l'objectif cible est défini en pourcentage de gras (`targetBodyFatPercentage`).
 
 ## 2. Acteurs
 - **Acteur Principal :** Utilisateur Authentifié (Athlète ou Visiteur)
@@ -228,12 +228,21 @@ Permet à l'utilisateur de configurer un plan d'apport calorique précis en choi
    - L'apport calorique quotidien cible ajusté.
    - Le temps estimé pour atteindre la cible et le changement hebdomadaire approximatif.
    - Un tableau de projection hebdomadaire complet détaillant : Semaine, Poids estimé, et TDEE adapté.
+8. L'utilisateur sélectionne le type d'objectif de composition corporelle :
+    - Option Standard : Saisie du poids cible souhaité (`targetWeightKg`).
+    - Option Avancée : Saisie du taux de masse grasse cible souhaité (`targetBodyFatPercentage`). Le système verrouille alors la saisie de la date limite car l'échéance temporelle minimale sécurisée (Deadline) devient une variable calculée algorithmiquement par le moteur de transfert d'Alpert pour éviter la fonte musculaire.
+
 
 ## 5. Flux Alternatifs (Exceptions et Ajustement Évolutif)
 - **A1 : Somme des Macros Différente de 100%**
   - Si l'utilisateur saisit des pourcentages dont le cumul dévie de 100% (ex: 29% + 45% + 25% = 99%), le système applique une mise à l'échelle proportionnelle automatique (Rescaling) pour forcer un total à 100% avant de convertir les grammes.
 - **A2 : Recalcul Temporel Évolutif de la Trajectoire**
   - Contrairement aux calculs à plat statiques, à chaque ligne de semaine du tableau de projection, le système recalcule récursivement le nouveau BMR et le nouveau TDEE basés sur le poids projeté de la semaine précédente pour refléter l'adaptation métabolique théorique.
+- **A3 : Simulation par Objectif de Masse Grasse (MFL Switch)**
+  - Si l'utilisateur choisit l'objectif `targetBodyFatPercentage`, le système appelle le service de simulation interne du PulsePath Engine.
+  - Le système calcule le poids cible final théorique où la masse sèche actuelle représente $(100 - \text{targetBodyFatPercentage})\%$.
+  - Il configure le déficit quotidien de chaque ligne de semaine de manière à ce qu'il corresponde exactement au plafond dynamique du Transfert Maximal de Gras ($MFT = FM \times 69,2$).
+  - La durée globale nécessaire (nombre de semaines) est calculée et retournée de manière dynamique à l'écran.
 
 ## 6. Postconditions
 - La trajectoire temporelle de poids est modélisée.
