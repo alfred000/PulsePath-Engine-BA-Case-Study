@@ -253,3 +253,56 @@ L'ajustement des macro-nutriments s'effectue sur la base des calories cibles con
 *   `Nouvelle_Cible_Pas = Objectif_Pas_Initial + Pas_Supplementaires_Requis`
 
 *   **Contrainte d'Épuisement (Hard Guardrail)** : Si `Nouvelle_Cible_Pas > 18000`, le système force la valeur à 18 000 pas et déclenche l'alerte de révision de l'échéance temporelle (`SF-ANP-03`).
+---
+# 15. RM-PA-01 : Module de Planification Alimentaire
+
+Ce document spécifie les règles logiques d'agrégation, les tolérances de calcul algorithmique et les formules de mise à l'échelle des portions utilisées par le planificateur PulsePath Engine.
+
+---
+
+## I. Règles de Gestion (Business Rules)
+
+### RG005 : Règle de Tolérance d'Ajustement Macro-nutritionnel
+Pour être validé par le système, le plan d'une journée complète doit respecter l'encadrement mathématique suivant par rapport aux cibles théoriques de l'utilisateur :
+- $\text{Calories Totales} = \text{Cible} \pm 50 \text{ kcal}$
+- $\text{Protéines Totales} = \text{Cible} \pm 5 \text{ g}$
+
+### RG006 : Priorisation des Aliments à Exclure (Blacklist)
+La liste des aliments à éviter configurée par l'utilisateur agit comme un filtre de sécurité prioritaire de niveau 0 (Masquage SQL hard filter). Si une recette contient ne serait-ce qu'un seul ingrédient présent dans la liste d'exclusion, elle est définitivement bannie de l'arbre de sélection de l'algorithme de génération.
+
+### RG007 : Règle d'Isoménu pour la Substitution (Swap)
+Lorsqu'un utilisateur demande le remplacement d'un repas dans le calendrier, le moteur de recherche filtre les recettes alternatives selon l'indice de proximité macronutritionnelle ($IPM$) :
+$$\text{Proximité Calories} \le 10\% \quad \text{et} \quad \text{Proximité Protéines} \le 10\%$$
+
+---
+
+## II. Formules Mathématiques de Mise à l'Échelle et d'Agrégation
+
+### 1. Ajustement Dynamique des Portions et des Personnes
+Les recettes en base de données possèdent un poids d'ingrédient de référence calibré pour **1 portion standard (1 personne)**. 
+Lors de l'intégration dans le calendrier, le système calcule le multiplicateur de masse de l'ingrédient ($M_i$) :
+
+$$M_i = \text{Portions Demandées} \times \text{Nombre de Personnes}$$
+
+*Exemple d'application :* Si une recette de Chili de Bœuf requiert 120g de viande hachée de référence pour 1 portion, et que l'utilisateur planifie ce repas pour 2 portions par personne pour une tablée de 4 personnes :
+$$M_i = 2 \times 4 = 8$$
+$$\text{Quantité requise en cuisine} = 120\text{g} \times 8 = 960\text{g}$$
+
+### 2. Algorithme de Consolidation de la Liste de Courses (Mise à plat)
+Pour générer la liste de courses, le système parcourt la matrice des repas planifiés sur la période $P$, extrait les ingrédients, convertit les unités dans un référentiel standardisé (Grammes ou Millilitres) et applique la formule de sommation par groupe d'ingrédient unique ($I$) et par rayon ($R$) :
+
+$$\text{Quantité Totale L'ingrédient } I = \sum_{d=1}^{7} \sum_{m=1}^{M} \left( Q_{\text{réf}}(I) \times M_i \right)$$
+
+Où :
+- $d$ représente le jour de la semaine (1 à 7).
+- $m$ représente le repas de la journée (Repas 1 à $M$).
+- $Q_{\text{réf}}(I)$ est la quantité unitaire de base de l'ingrédient dans la recette sélectionnée.
+
+### 3. Profils de Distribution Calorique par Repas (Fréquence)
+Selon le nombre de repas par jour choisi par l'utilisateur, l'enveloppe calorique globale journalière ($\text{Intake}$) est segmentée par le backend .NET selon les coefficients d'impact suivants pour équilibrer la satiété :
+
+| Fréquence de Repas | Repas 1 (Petit-Déj) | Repas 2 (Déjeuner) | Repas 3 (Collation) | Repas 4 (Dîner) |
+| :--- | :--- | :--- | :--- | :--- |
+| **3 Repas / jour** | $30\%$ du total kcal | $40\%$ du total kcal | — | $30\%$ du total kcal |
+| **4 Repas / jour** | $25\%$ du total kcal | $35\%$ du total kcal | $15\%$ du total kcal | $25\%$ du total kcal |
+| **5 Repas / jour** | $20\%$ du total kcal | $30\%$ du total kcal | $15\%$ du total kcal | $25\%$ du total kcal + (Collation 2 : $10\%$) |
