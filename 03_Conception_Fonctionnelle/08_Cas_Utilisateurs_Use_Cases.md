@@ -1,11 +1,11 @@
 # 📄 Cas d’Utilisation (Use Cases) : PulsePath Engine
 
-## 1. Présentation
+## Présentation
 Les cas d’utilisation ci-dessous décrivent les interactions majeures entre l’**Utilisateur** et le **Moteur PulsePath**. Ils se concentrent sur les besoins fonctionnels nécessaires pour maintenir la "Source Unique de Vérité" (le journal quotidien) et générer les indicateurs de "Vélocité".
 
 ---
 
-## 2. UC-01 : Saisir les métriques quotidiennes (Cœur du système)
+## UC-01 : Saisir les métriques quotidiennes (Cœur du système)
 *   **Acteur principal :** Utilisateur
 *   **Objectif :** Enregistrer les données physiologiques et nutritionnelles pour mettre à jour la trajectoire.
 *   **Pré-conditions :** L'utilisateur est authentifié ; les données de profil (poids cible, âge, taille) sont renseignées.
@@ -21,7 +21,7 @@ Les cas d’utilisation ci-dessous décrivent les interactions majeures entre l�
 
 ---
 
-## 3. UC-02 : Consulter la trajectoire dynamique (Analyse prédictive)
+## UC-02 : Consulter la trajectoire dynamique (Analyse prédictive)
 *   **Acteur principal :** Utilisateur
 *   **Objectif :** Visualiser l'impact du comportement récent sur la date d'échéance finale.
 *   **Pré-conditions :** Au moins 3 jours de saisies consécutives sont présents en base de données.
@@ -34,7 +34,7 @@ Les cas d’utilisation ci-dessous décrivent les interactions majeures entre l�
 
 ---
 
-## 4. UC-03 : Recevoir un "Coach Insight" automatisé
+## UC-03 : Recevoir un "Coach Insight" automatisé
 *   **Acteur principal :** Système (Automatisé)
 *   **Objectif :** Fournir un conseil stratégique basé sur les corrélations de données.
 *   **Scénario nominal :**
@@ -45,7 +45,7 @@ Les cas d’utilisation ci-dessous décrivent les interactions majeures entre l�
 
 ---
 
-# 5. UC-04 : Simulation de la Trajectoire de Composition Corporelle
+# UC-04 : Simulation de la Trajectoire de Composition Corporelle
 
 ## 1. Description
 Permet à un utilisateur intermédiaire ou avancé de configurer une simulation dynamique de sa perte de gras sur une période donnée. Le système s'appuie sur les données réelles d'une balance connectée et applique le principe thermodynamique d'Alpert (69,2 kcal/kg de gras/jour) pour projeter l'évolution de 13 métriques corporelles et valider la sécurité du déficit calorique choisi.
@@ -86,7 +86,7 @@ Permet à un utilisateur intermédiaire ou avancé de configurer une simulation 
 - L'utilisateur peut exporter la projection au format CSV ou sauvegarder ce scénario de planification dans son profil.
 
 ---
-# 6. UC-05 : Agrégation Automatique et Traitement de la Télémétrie Biométrique
+# UC-05 : Agrégation Automatique et Traitement de la Télémétrie Biométrique
 
 ## 1. Description
 Permet à l'utilisateur de centraliser et d'automatiser la collecte de ses données métaboliques et biométriques à partir de son écosystème matériel (Balance connectée, Apple Health, MyFitnessPal, Garmin/Apple Watch). Le système analyse ces flux en continu pour mettre à jour la boucle thermodynamique de simulation et évaluer la récupération du système nerveux central (SNC). Un mécanisme de repli (fallback) manuel est disponible à tout moment en cas de défaillance des API tierces.
@@ -169,6 +169,39 @@ Permet à l'utilisateur de configurer, générer et personnaliser un plan de rep
 - La liste de courses est disponible pour exportation (PDF ou synchronisation sur l'application mobile).
 
 ---
+# UC-07 : Planification, Saisie et Analyse Analytique des Entraînements
+
+## 1. Description
+Permet à l'utilisateur de concevoir des routines d'entraînement personnalisées (multi-day splits), de consigner ses séances en temps réel à l'aide d'outils d'assistance en salle (chronomètre de repos, calculateur de plaques de fonte), et d'analyser ses gains de force via des algorithmes d'estimation du Max (1RM) et une carte de chaleur musculaire (Muscle Heatmap).
+
+## 2. Acteurs
+- **Acteur Principal :** Utilisateur Authentifié (Athlète / Pratiquant intermédiaire)
+- **Acteur Secondaire :** Moteur analytique PulsePath Engine (Backend .NET)
+
+## 3. Préconditions
+- L'utilisateur est connecté à son compte et a configuré ses préférences de matériel (barres olympiques de 20 kg ou barres standards de 15 kg).
+
+## 4. Flux Principal (Scénario Nominal)
+1. **Planification :** L'utilisateur accède au "Routine Builder" et crée un cycle d'entraînement (ex: Push/Pull/Legs analysé au Day 1-5). Il sélectionne des exercices depuis la bibliothèque ou crée un mouvement personnalisé.
+2. **Initialisation de Séance :** À la salle, l'utilisateur clique sur "Démarrer la séance". Le système charge la routine et pré-remplit automatiquement les champs de texte avec les charges (poids) et répétitions validées lors de la séance précédente pour cet exercice précis.
+3. **Saisie Rapide en Salle :** Pour chaque série (set) effectuée, l'utilisateur coche la case de validation. Il catégorise le type de série via des puces dédiées : *Échauffement (Warmup)*, *Série Effective (Working Set)*, *Série Dégressive (Drop Set)*, ou *Échec Musculaire (Failure)*.
+4. **Assistance au Repos :** Dès qu'une série est validée, le système déclenche automatiquement un compte à rebours visuel et sonore (Rest Timer) calibré pour cet exercice.
+5. **Calcul de Charge :** En cas d'hésitation sur le chargement d'une barre lourde, l'utilisateur ouvre le "Plate Calculator". Il saisit le poids total cible et le système lui indique visuellement le nombre de disques de 25, 20, 15, 10, 5 et 2.5 kg à placer de chaque côté de la barre.
+6. **Clôture de Séance :** L'utilisateur clique sur "Terminer l'entraînement". Le système traite le volume total, vérifie si de nouveaux records personnels (PR) ont été battus, et met à jour l'historique.
+
+## 5. Flux Alternatifs (Exceptions et Visualisations)
+- **A1 : Briser la Routine / Exercice de Substitution**
+  - En salle, si une machine ou un banc est occupé, l'utilisateur peut glisser le doigt sur l'exercice prévu et cliquer sur "Remplacer".
+  - Le système filtre la bibliothèque et propose des mouvements de substitution ciblant le même groupe musculaire primaire.
+- **A2 : Consultation des Statistiques et Carte de Chaleur**
+  - L'utilisateur se rend sur l'onglet "Analytique".
+  - Le système génère un graphique de tendance de force (Évolution du 1RM estimé) et une carte thermique du corps humain (Muscle Heatmap). Les muscles intensément sollicités ou en cours de récupération (basés sur les marqueurs HRV/RHR du `UC002`) s'affichent avec un dégradé de couleur (Rouge = Sollicité/Fatigué, Vert = Récupéré/Prêt).
+
+## 6. Postconditions
+- Les performances de la séance sont indexées dans la base de données temporelle.
+- Les charges de référence pour le prochain entraînement sont mises à jour de manière incrémentale.
+---
+
 ## 7. Matrice de Priorité des Cas d'Utilisation
 
 | ID | Nom du Cas d'Utilisation | Importance Métier | Complexité |
