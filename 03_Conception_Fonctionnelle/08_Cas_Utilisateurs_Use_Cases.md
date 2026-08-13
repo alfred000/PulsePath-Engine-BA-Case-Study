@@ -125,6 +125,50 @@ Permet à l'utilisateur de centraliser et d'automatiser la collecte de ses donn�
 - Les indicateurs de fatigue du SNC (HRV/RHR) sont mis à disposition du tableau de bord d'analyse.
 
 ---
+# UC-06 : Planification et Génération de Menus Nutritionnels Intelligents
+
+## 1. Description
+Permet à l'utilisateur de configurer, générer et personnaliser un plan de repas sur 7 jours adapté à ses objectifs physiques (perte de gras via le moteur d'Alpert, maintien ou gain musculaire) et à ses préférences diététiques. Le système compile automatiquement les besoins macro-nutritionnels calculés, génère une liste de courses catégorisée par rayon, fournit des instructions de préparation de repas (Meal Prep) et permet des substitutions à la volée.
+
+## 2. Acteurs
+- **Acteur Principal :** Utilisateur Authentifié (Athlète)
+- **Acteur Secondaire :** Moteur de Calcul Nutritionnel PulsePath Engine (Backend .NET)
+
+## 3. Préconditions
+- L'utilisateur a configuré ses données anthropométriques et ses cibles journalières dans son profil ou via la simulation de composition corporelle (`UC001`).
+
+## 4. Flux Principal (Scénario Nominal)
+1. L'utilisateur accède au module "Générateur de Plan de Repas".
+2. L'utilisateur configure les paramètres de sa planification :
+   - Nombre de jours (par défaut 7 jours).
+   - Nombre de repas par jour (Fréquence).
+   - Nombre de portions par repas et nombre de personnes (Modèle Familial).
+   - Type de régime (Hyperprotéiné, Low Fat, Low Carb, Équilibré, Végétarien, Keto, Family-Friendly).
+3. L'utilisateur affine ses préférences :
+   - Aliments favoris par groupe (Sources de Protéines, Glucides, Lipides).
+   - Aliments à exclure (Allergies ou aversions).
+   - Temps limite de préparation par repas (ex: moins de 20 minutes).
+4. L'utilisateur clique sur "Générer le Plan de Repas".
+5. Le système interroge la base de données des recettes, applique l'algorithme d'optimisation de sac à dos (Knapsack Problem) pour faire correspondre le total calorique et les macros sur les 7 jours de la grille calendaire.
+6. Le système affiche le calendrier hebdomadaire avec une vue quotidienne détaillée de la répartition des calories et macro-nutriments.
+7. L'utilisateur clique sur "Générer la Liste de Courses".
+8. Le système consolide tous les ingrédients des recettes planifiées, les multiplie par le nombre de portions/personnes et produit une liste d'achat catégorisée par rayons.
+
+## 5. Flux Alternatifs (Modifications et Gestion)
+- **A1 : Remplacement d'un repas (Swap Feature)**
+  - L'utilisateur n'aime pas une recette proposée sur un jour donné.
+  - Il clique sur le bouton "Remplacer le repas".
+  - Le système effectue une recherche filtrée et présente des alternatives de recettes isoménus (calories et macronutriments similaires à $\pm 5\%$).
+  - L'utilisateur valide le remplacement; la liste de courses globale est automatiquement recalculée.
+- **A2 : Enregistrement de Repas Favoris & Ajout Rapide**
+  - L'utilisateur peut marquer un repas ou une combinaison d'aliments comme "Favori".
+  - À tout moment dans le calendrier, il peut faire un "Ajout Rapide" de ce favori, ce qui écrase la suggestion automatique et recalcule le solde énergétique de la journée.
+
+## 6. Postconditions
+- Le plan de repas 7 jours est enregistré dans l'agenda de l'utilisateur.
+- La liste de courses est disponible pour exportation (PDF ou synchronisation sur l'application mobile).
+
+---
 ## 7. Matrice de Priorité des Cas d'Utilisation
 
 | ID | Nom du Cas d'Utilisation | Importance Métier | Complexité |
@@ -134,3 +178,4 @@ Permet à l'utilisateur de centraliser et d'automatiser la collecte de ses donn�
 | **UC-03** | Coach Insights | 🟠 Haute | Moyenne |
 | **UC-04** |  Simulation Dynamique | 🟠 Haute | Moyenne |
 | **UC-05** | Télémétrie Biométrique | 🔴 Critique | Basse |
+| **UC-06** | Menus Nutritionnels | 🔴 Critique | Basse |
