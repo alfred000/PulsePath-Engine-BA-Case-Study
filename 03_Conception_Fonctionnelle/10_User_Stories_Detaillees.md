@@ -1,11 +1,11 @@
 # 📄 User Stories Détaillées : PulsePath Engine
 
-## 1. Présentation
+## Présentation
 Ce document détaille les spécifications fonctionnelles sous forme de **User Stories**. Chaque story définit un besoin utilisateur, sa valeur métier et les critères précis permettant de valider sa bonne implémentation (Definition of Done).
 
 ---
 
-## 2. US-01 : Recalcul dynamique de l'échéance cible
+## US-01 : Recalcul dynamique de l'échéance cible
 **Priorité :** Must-have | **Estimation :** 5 SP
 
 *   **Énoncé :** En tant qu'utilisateur, je veux que le système mette à jour ma date d'échéance estimée dès que je saisis mes données du jour, afin de comprendre l'impact immédiat de ma discipline sur mon objectif.
@@ -17,7 +17,7 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
 
 ---
 
-## 3. US-03 : Algorithme de TDEE dynamique (Pas)
+## US-03 : Algorithme de TDEE dynamique (Pas)
 **Priorité :** Must-have | **Estimation :** 5 SP
 
 *   **Énoncé :** En tant qu'utilisateur, je veux que ma dépense énergétique soit ajustée en fonction de mon activité réelle (pas), afin d'avoir un bilan calorique net précis chaque jour.
@@ -28,7 +28,7 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
 
 ---
 
-## 4. US-04 : Suivi de la cible de Protéines
+## US-04 : Suivi de la cible de Protéines
 **Priorité :** Should-have | **Estimation :** 3 SP
 
 *   **Énoncé :** En tant qu'utilisateur, je veux visualiser mon apport protéique par rapport à ma cible personnalisée, afin de m'assurer que je préserve ma masse musculaire pendant ma perte de poids.
@@ -39,7 +39,7 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
 
 ---
 
-## 5. US-05 : Tracking de la fenêtre de Jeûne Intermittent
+## US-05 : Tracking de la fenêtre de Jeûne Intermittent
 **Priorité :** Should-have | **Estimation :** 5 SP
 
 *   **Énoncé :** En tant qu'utilisateur, je veux enregistrer mes heures de début et de fin de repas, afin de vérifier le respect de mon protocole de jeûne.
@@ -49,7 +49,7 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
     *   **CA 3** : Le système doit empêcher la saisie d'une heure de fin antérieure à l'heure de début sur la même journée civile.
 
 ---
-## 6. US-06 : Inscription & Connexion Sécurisée 
+## US-06 : Inscription & Connexion Sécurisée 
 **Priorité :** Should-have | **Estimation :** 5 SP
 
 *   **Énoncé :**  En tant que nouvel utilisateur, Je veux créer un compte avec un email et un mot de passe sécurisé, puis m'authentifier, Afin de protéger mes données physiologiques personnelles et accéder à mon espace sécurisé.
