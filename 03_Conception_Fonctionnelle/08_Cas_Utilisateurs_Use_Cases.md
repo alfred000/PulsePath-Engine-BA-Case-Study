@@ -201,7 +201,45 @@ Permet à l'utilisateur de concevoir des routines d'entraînement personnalisée
 - Les performances de la séance sont indexées dans la base de données temporelle.
 - Les charges de référence pour le prochain entraînement sont mises à jour de manière incrémentale.
 ---
+# UC-08 : Planification Avancée des Calories et Modélisation de Trajectoire de Poids
 
+## 1. Description
+Permet à l'utilisateur de configurer un plan d'apport calorique précis en choisissant parmi trois modes de ciblage (par date limite, par apport fixe ou par maintien). Le système s'appuie sur une constante de 7 700 kcal par kilogramme de variation corporelle pour projeter de manière linéaire et dynamique la trajectoire du poids semaine par semaine.
+
+## 2. Acteurs
+- **Acteur Principal :** Utilisateur Authentifié (Athlète ou Visiteur)
+- **Acteur Secondaire :** Moteur d'estimation métabolique PulsePath Engine (Backend .NET)
+
+## 3. Préconditions
+- L'utilisateur accède à l'interface en mode métrique (cm, kg).
+
+## 4. Flux Principal (Scénario Nominal)
+1. L'utilisateur sélectionne son **Sexe**, saisit son **Âge**, sa **Taille** (cm), son **Poids Actuel** (kg) et optionnellement son **Taux de Masse Grasse**.
+2. L'utilisateur configure le facteur d'activité (Sédentaire, Légèrement actif, Modérément actif, Actif, Très actif).
+3. L'utilisateur choisit la méthode de calcul du Métabolisme de Base (BMR) : **Mifflin-St Jeor** ou **Katch-McArdle**.
+4. L'utilisateur choisit l'un des **trois modes d'objectif** :
+   - *Mode A : Objectif de calories par date / semaines limites* (Calorie target by date)
+   - *Mode B : Temps pour atteindre l'objectif par apport fixe* (Time to target by intake)
+   - *Mode C : Aperçu du maintien de base* (Maintenance TDEE)
+5. L'utilisateur configure la répartition macro-nutritionnelle cible initiale en pourcentage (ex: Protéines 29%, Glucides 45%, Lipides 25%).
+6. L'utilisateur clique sur "Calculer".
+7. Le système valide, applique le redimensionnement automatique des macros si la somme n'est pas égale à 100%, et génère :
+   - L'estimation précise du TDEE.
+   - L'apport calorique quotidien cible ajusté.
+   - Le temps estimé pour atteindre la cible et le changement hebdomadaire approximatif.
+   - Un tableau de projection hebdomadaire complet détaillant : Semaine, Poids estimé, et TDEE adapté.
+
+## 5. Flux Alternatifs (Exceptions et Ajustement Évolutif)
+- **A1 : Somme des Macros Différente de 100%**
+  - Si l'utilisateur saisit des pourcentages dont le cumul dévie de 100% (ex: 29% + 45% + 25% = 99%), le système applique une mise à l'échelle proportionnelle automatique (Rescaling) pour forcer un total à 100% avant de convertir les grammes.
+- **A2 : Recalcul Temporel Évolutif de la Trajectoire**
+  - Contrairement aux calculs à plat statiques, à chaque ligne de semaine du tableau de projection, le système recalcule récursivement le nouveau BMR et le nouveau TDEE basés sur le poids projeté de la semaine précédente pour refléter l'adaptation métabolique théorique.
+
+## 6. Postconditions
+- La trajectoire temporelle de poids est modélisée.
+- L'utilisateur peut copier une URL de partage contenant tous les paramètres d'état (Query Strings) ou sauvegarder le plan localement.
+
+---
 ## Matrice de Priorité des Cas d'Utilisation
 
 | ID | Nom du Cas d'Utilisation | Importance Métier | Complexité |
