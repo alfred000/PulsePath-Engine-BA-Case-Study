@@ -202,7 +202,7 @@ Permet à l'utilisateur de concevoir des routines d'entraînement personnalisée
 - Les charges de référence pour le prochain entraînement sont mises à jour de manière incrémentale.
 ---
 
-## 7. Matrice de Priorité des Cas d'Utilisation
+## Matrice de Priorité des Cas d'Utilisation
 
 | ID | Nom du Cas d'Utilisation | Importance Métier | Complexité |
 | :--- | :--- | :--- | :--- |
@@ -212,3 +212,4 @@ Permet à l'utilisateur de concevoir des routines d'entraînement personnalisée
 | **UC-04** |  Simulation Dynamique | 🟠 Haute | Moyenne |
 | **UC-05** | Télémétrie Biométrique | 🔴 Critique | Basse |
 | **UC-06** | Menus Nutritionnels | 🔴 Critique | Basse |
+| **UC-07** | Entraînement Personnalisées | 🔴 Critique | Basse |
