@@ -258,8 +258,6 @@ L'ajustement des macro-nutriments s'effectue sur la base des calories cibles con
 
 Ce document spécifie les règles logiques d'agrégation, les tolérances de calcul algorithmique et les formules de mise à l'échelle des portions utilisées par le planificateur PulsePath Engine.
 
----
-
 ## I. Règles de Gestion (Business Rules)
 
 ### RG005 : Règle de Tolérance d'Ajustement Macro-nutritionnel
@@ -273,8 +271,6 @@ La liste des aliments à éviter configurée par l'utilisateur agit comme un fil
 ### RG007 : Règle d'Isoménu pour la Substitution (Swap)
 Lorsqu'un utilisateur demande le remplacement d'un repas dans le calendrier, le moteur de recherche filtre les recettes alternatives selon l'indice de proximité macronutritionnelle ($IPM$) :
 $$\text{Proximité Calories} \le 10\% \quad \text{et} \quad \text{Proximité Protéines} \le 10\%$$
-
----
 
 ## II. Formules Mathématiques de Mise à l'Échelle et d'Agrégation
 
@@ -306,3 +302,58 @@ Selon le nombre de repas par jour choisi par l'utilisateur, l'enveloppe caloriqu
 | **3 Repas / jour** | $30\%$ du total kcal | $40\%$ du total kcal | — | $30\%$ du total kcal |
 | **4 Repas / jour** | $25\%$ du total kcal | $35\%$ du total kcal | $15\%$ du total kcal | $25\%$ du total kcal |
 | **5 Repas / jour** | $20\%$ du total kcal | $30\%$ du total kcal | $15\%$ du total kcal | $25\%$ du total kcal + (Collation 2 : $10\%$) |
+---
+# 16. RM-APA-01 : Moteur d'Analyse de Performance Athlétique
+
+Ce document formalise les algorithmes d'estimation de puissance, les calculs de répartition de fonte pour les barres, et les règles d'évaluation de la fatigue de la carte thermique musculaire.
+
+## I. Règles de Gestion (Business Rules)
+
+### RG008 : Protection de la Surcharge Progressive (Règle d'Incrémentation)
+Le poids de référence pré-rempli pour la séance $N$ correspond à la charge maximale avec laquelle l'utilisateur a réussi à atteindre la borne haute de sa fourchette de répétitions cible lors de la séance $N-1$. 
+
+### RG009 : Exclusion des Séries d'Échauffement du Volume Effectif
+Lors du calcul du volume d'entraînement total d'un muscle ou d'une séance, le système doit ignorer toutes les séries marquées du tag `Warmup`. Seules les séries `WorkingSet`, `DropSet` et `Failure` entrent dans l'équation de calcul du volume de croissance.
+
+### RG010 : Règle de Priorité du Calculateur de Plaques (Plate Calculator)
+Le calculateur de plaques doit toujours chercher à minimiser le nombre total de disques disposés sur la barre en sélectionnant d'abord les unités de masse les plus élevées disponibles en salle (Ordre de priorité : 25 kg > 20 kg > 15 kg > 10 kg > 5 kg > 2.5 kg > 1.25 kg).
+
+## II. Formules Mathématiques et Algorithmes Quantitatifs
+
+### 1. Algorithme d'Estimation de la Force Maximale (Formule d'Epley pour le 1RM)
+Pour estimer le poids maximal théorique qu'un athlète peut soulever sur 1 seule répétition (1RM) à partir d'une série menée proche de l'échec ($Reps \le 12$), le système applique la formule d'Epley :
+
+$$\text{1RM Estimé} = Poids \times \left( 1 + \frac{Reps}{30} \right)$$
+
+*Exemple d'application :* Si lors du Day 1, vous validez une série lourde au développé couché à 90 kg pour 8 répétitions :
+$$\text{1RM} = 90 \times \left( 1 + \frac{8}{30} \right) = 90 \times 1.2667 = 114\text{ kg}$$
+
+### 2. Algorithme Mathématique du Calculateur de Plaques (Barbell Load Decomposition)
+Soit $M_{\text{cible}}$ la masse totale souhaitée par l'athlète et $M_{\text{barre}}$ la masse à vide de la barre olympique choisie (ex: 20 kg). La masse résiduelle à répartir équitablement de chaque côté de la barre ($M_{\text{côté}}$) est définie par :
+
+$$M_{\text{côté}} = \frac{M_{\text{cible}} - M_{\text{barre}}}{2}$$
+
+L'algorithme de division entière itère ensuite sur le tableau trié des disques disponibles $[25, 20, 15, 10, 5, 2.5, 1.25]$ pour trouver le nombre de disques $N_d$ par côté :
+
+$$N_d = \lfloor \frac{M_{\text{côté}}}{Poids_{\text{disque}}} \rfloor$$
+$$M_{\text{côté}} = M_{\text{côté}} \pmod{Poids_{\text{disque}}}$$
+
+*Exemple de trace d'exécution pour charger une barre à 102.5 kg avec une barre de 20 kg :*
+- $M_{\text{côté}} = (102.5 - 20) / 2 = 41.25\text{ kg}$ par côté.
+- Étape 1 (Disque 25 kg) : $N_{25} = \lfloor 41.25 / 25 \rfloor = 1$ disque. Reste = $16.25\text{ kg}$.
+- Étape 2 (Disque 20 kg) : Reste inférieur à 20. $N_{20} = 0$.
+- Étape 3 (Disque 15 kg) : $N_{15} = \lfloor 16.25 / 15 \rfloor = 1$ disque. Reste = $1.25\text{ kg}$.
+- Étape 4 (Disques 10, 5, 2.5 kg) : Reste trop bas, compteurs à 0.
+- Étape 5 (Disque 1.25 kg) : $N_{1.25} = \lfloor 1.25 / 1.25 \rfloor = 1$ disque. Reste = $0\text{ kg}$.
+- **Résultat UI :** Placez 1 disque de 25 kg, 1 disque de 15 kg et 1 disque de 1.25 kg de chaque côté.
+
+### 3. Calcul de l'Indice d'Épuisement Tissulaire (Muscle Heatmap Index)
+La coloration de chaque groupe musculaire (ex: Pectoraux, Quadriceps) sur la carte de chaleur 3D de l'interface Angular dépend de l'Indice de Fatigue Accumulée ($IFA$) calculé sur une fenêtre glissante de 48 heures :
+
+$$IFA = \sum_{\text{séries}} \left( \text{Poids} \times \text{Reps} \times \text{CoefficientType} \right) \times \text{FacteurDégradationHRV}$$
+
+Où les coefficients de stress valent :
+- $\text{WorkingSet} = 1.0$
+- `Failure` $= 1.4$ (L'échec engendre un stress nerveux supérieur)
+- `DropSet` $= 1.2$
+- $\text{FacteurDégradationHRV} = \text{Si la HRV du jour (UC002) est basse, multiplier l'IFA par 1.25 pour ralentir la récupération visuelle.}$$
