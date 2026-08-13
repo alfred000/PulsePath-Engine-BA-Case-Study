@@ -357,3 +357,65 @@ Où les coefficients de stress valent :
 - `Failure` $= 1.4$ (L'échec engendre un stress nerveux supérieur)
 - `DropSet` $= 1.2$
 - $\text{FacteurDégradationHRV} = \text{Si la HRV du jour (UC002) est basse, multiplier l'IFA par 1.25 pour ralentir la récupération visuelle.}$$
+---
+
+# 17. RM-MML-01 : Moteur Métabolique et Modélisation Linéaire
+
+Ce document formalise les équations de base du métabolisme, la constante de conversion de masse, et l'algorithme de projection itérative hebdomadaire calqué sur l'outil de référence.
+
+## I. Règles de Gestion (Business Rules)
+
+### RG011 : Constante Énergétique du Changement de Poids
+Le système utilise la constante standardisée de **7 700 kcal pour 1 kilogramme de variation de poids corporel**. Toute accumulation ou restriction de 7 700 kcal par rapport à la maintenance est traduite par un gain ou une perte de 1 kg de masse.
+
+### RG012 : Algorithme de Rescaling Forcé des Macros
+Si la somme des pourcentages des macros ($P_{\%} + C_{\%} + F_{\%}$) est différente de $100$, le système applique un facteur de correction $K = \frac{100}{P_{\%} + C_{\%} + F_{\%}}$. Les nouveaux pourcentages appliqués pour le calcul des grammes sont :
+$$P_{\text{final}} = P_{\%} \times K, \quad C_{\text{final}} = C_{\%} \times K, \quad F_{\text{final}} = F_{\%} \times K$$
+
+## II. Formules Mathématiques et Analyse Métabolique (Données Démo)
+
+### 1. Calcul du BMR (Mifflin-St Jeor par défaut)
+Pour un individu de sexe masculin :
+$$\text{BMR} = (10 \times \text{Poids (kg)}) + (6.25 \times \text{Taille (cm)}) - (5 \times \text{Âge (ans)}) + 5$$
+
+*Application avec les données de démonstration (72 kg, 170 cm, 30 ans) :*
+$$\text{BMR} = (10 \times 72) + (6.25 \times 170) - (5 \times 30) + 5$$
+$$\text{BMR} = 720 + 1062.5 - 150 + 5 = 1637.5 \text{ kcal}$$
+
+### 2. Multiplicateurs d'Activité Standardisés (TDEE)
+Le TDEE initial est obtenu en multipliant le BMR par le facteur de l'activité choisie :
+- Sédentaire : $\times 1.2$
+- Légèrement Actif : $\times 1.375$
+- Modérément Actif (Choix Démo) : $\times 1.55$
+- Actif : $\times 1.725$
+- Très Actif : $\times 1.9$
+
+$$\text{TDEE}_{\text{Initial}} = 1637.5 \times 1.55 \approx 2538 \text{ kcal}$$
+
+### 3. Résolution Mathématique par Mode : Mode Target by Date
+Pour un objectif de poids de $65.8 \text{ kg}$ sur une durée de $18 \text{ semaines}$ ($126 \text{ jours}$) :
+- Poids total à perdre : $72 - 65.8 = 6.2 \text{ kg}$
+- Énergie totale du déficit requise : $6.2 \text{ kg} \times 7700 \text{ kcal/kg} = 47740 \text{ kcal}$
+- Déficit quotidien requis : $47740 \text{ kcal} / 126 \text{ jours} \approx 379 \text{ kcal/jour}$
+- **Apport Calorique Quotidien Cible :** $\text{TDEE}_{\text{Initial}} - 379 = 2538 - 379 = 2159 \text{ kcal/jour}$
+
+## III. Algorithme de Projection Hebdomadaire Dynamique
+
+Pour générer le tableau de projection pas à pas :
+- Perte de poids hebdomadaire : $\frac{379 \text{ kcal/jour} \times 7 \text{ jours}}{7700 \text{ kcal/kg}} \approx 0.344 \text{ kg/semaine}$
+
+À la fin de chaque semaine $n$, le système met à jour le poids et recalcule le TDEE pour la ligne suivante afin de simuler l'adaptation métabolique :
+
+$$\text{Poids}_{n} = \text{Poids}_{n-1} - 0.344$$
+$$\text{BMR}_{n} = (10 \times \text{Poids}_{n}) + (6.25 \times 170) - (5 \times 30) + 5$$
+$$\text{TDEE}_{n} = \text{BMR}_{n} \times 1.55$$
+
+### Extrait de la Matrice Finale de Projection Générée :
+
+| Semaine | Poids Projeté (kg) | TDEE Projeté (kcal) | Apport Recommandé (kcal) |
+| :--- | :--- | :--- | :--- |
+| Semaine 0 (Initial) | 72.00 kg | 2538 kcal | 2159 kcal |
+| Semaine 1 | 71.66 kg | 2533 kcal | 2159 kcal |
+| Semaine 2 | 71.31 kg | 2527 kcal | 2159 kcal |
+| ... | ... | ... | ... |
+| Semaine 18 (Final) | 65.80 kg | 2442 kcal | 2159 kcal |
