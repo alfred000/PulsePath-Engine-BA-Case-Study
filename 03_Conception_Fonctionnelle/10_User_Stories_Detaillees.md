@@ -278,6 +278,10 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
         *    **Given** une simulation réussie.
         *    **When** je clique sur "Copy shareable URL".
         *    **Then** le système doit sérialiser tous les inputs sous forme de paramètres de requête (`?mode=targetByDate&system=metric&sex=male...`) pour permettre une réhydratation instantanée de l'état de l'écran lors d'une visite future ou d'un partage.
-
-
-     
+    *   **CA 5** : Pilotage intelligent par objectif de Taux de Masse Grasse
+        *    **Given** que je choisis l'option "Objectif par Taux de Masse Grasse".
+        *    **When** je saisis une valeur cible (ex: `targetBodyFatPercentage = 15%`) pour mes données initiales (76 kg, 25% de gras, 57 kg de masse maigre).
+        *    **Then** le planificateur doit masquer le sélecteur manuel de date limite et calculer informatiquement :
+  - Mon poids cible de sécurité : $57\text{ kg} / 0,85 = 67,05\text{ kg}$.
+  - Mon déficit optimal initial basé sur le plafond d'Alpert ($19\text{ kg de gras} \times 69,2 = 1314,8\text{ kcal}$).
+  - La trajectoire non-linéaire, en ajustant à la baisse le déficit calorique chaque semaine à mesure que ma masse grasse diminue, afin de m'indiquer la durée totale de simulation minimale requise pour atteindre 15% sans perdre un seul gramme de muscle.
