@@ -257,7 +257,27 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
         *    **Then** le système doit tracer une courbe d'évolution temporelle de mon Volume Total de travail (Poids x Reps x Séries) ainsi que mon 1RM estimé calculé via la formule d'Epley.
 
 ---
+## US-14 : Planificateur Éducatif de Calories et de Ligne de Tendance de Poids
+**Priorité :** Should-have | **Estimation :** 5 SP
 
+*   **Énoncé :**  En tant que Utilisateur soucieux de sa planification diététique, Simuler mes apports et mes échéances selon différents modes d'objectifs (par date ou par apport fixe) en choisissant ma méthode de BMR et mes ratios de macros, De sorte que Je puisse visualiser instantanément ma feuille de route hebdomadaire, anticiper mon adaptation métabolique et exporter un lien de partage de ma configuration.
+*   **Critères d'Acceptation (CA) :**
+    *   **CA 1** : Prise en charge multi-mode stricte
+        *   **Given** que je configure mes données anthropométriques de démonstration (Homme, 30 ans, 170 cm, 72 kg, activité modérée).
+        *   **When** je sélectionne le mode `targetByDate` avec un objectif ( ex: de 65,8 kg et une durée de 18 semaines).
+        *   **Then** le système doit calculer précisément le déficit total requis et le traduire en un objectif de calories quotidiennes fixes à consommer pour honorer cette échéance.
+    *   **CA 2** : Algorithme de Redimensionnement (Rescaling) des Macros
+        *   **Given** une saisie de répartition de macro-nutriments imparfaite (Protéines : 29%, Glucides : 45%, Lipides : 25% $\rightarrow$ Total : 99%).
+        *   **When** j'exécute le calcul.
+        *   **Then** le système ne doit pas bloquer l'application; il doit recalculer les ratios de manière à ce qu'ils atteignent mathématiquement 100% ($P_{\text{ajusté}} = 29/99$, etc.) pour afficher le grammage final exact arrondi.      
+    *   **CA 3** : Génération de la Grille de Projection Itérative
+        *   **Given** un plan d'action de perte de poids calculé sur plusieurs semaines.
+        *   **When** je consulte le tableau des résultats "Projected weekly weight".
+        *   **Then** je dois voir une ligne par semaine affichant la décroissance progressive du poids, ainsi que la diminution progressive associée du TDEE due à la perte de masse globale.
+    *   **CA 4** : Sauvegarde Locale et Persistance d'URL (State Management)
+        *    **Given** une simulation réussie.
+        *    **When** je clique sur "Copy shareable URL".
+        *    **Then** le système doit sérialiser tous les inputs sous forme de paramètres de requête (`?mode=targetByDate&system=metric&sex=male...`) pour permettre une réhydratation instantanée de l'état de l'écran lors d'une visite future ou d'un partage.
 
 
      
