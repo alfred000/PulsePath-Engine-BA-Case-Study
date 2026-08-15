@@ -281,6 +281,41 @@ Permet à l'utilisateur de configurer, suivre et optimiser les trois piliers com
 - Les volumes d'activité (NEAT), les heures de sommeil et l'historique des fenêtres de jeûne sont stockés dans la base de données temporelle.
 - Les données de NEAT (pas) mettent à jour de manière dynamique le calcul du TDEE quotidien utilisé par le planificateur de calories (`UC005`).
 ---
+
+# UC-10 : Parcours d'Onboarding Multi-Étapes et Diagnostic Métabolique Initial
+
+## 1. Description
+Ce cas d'utilisation décrit le tunnel d'onboarding séquentiel et obligatoire imposé à tout nouvel utilisateur lors de sa première connexion. Le système orchestre une architecture parent/enfant de composants Angular pour collecter de manière itérative les métriques anthropométriques, lier le hub de télémétrie, configurer les préférences de vie (habitudes, repas, entraînements) et exécuter le moteur d'Alpert pour initialiser l'intégralité de l'écosystème PulsePath d'un seul clic à l'étape finale.
+
+## 2. Acteurs
+- **Acteur Principal :** Nouvel Utilisateur Authentifié
+- **Acteur Secondaire :** Moteur d'initialisation PulsePath Engine (Backend .NET)
+
+## 3. Préconditions
+- L'utilisateur a créé ses identifiants de connexion (compte vierge sans profil).
+- L'utilisateur accède à l'application depuis un navigateur ou un terminal mobile.
+
+## 4. Flux Principal (Scénario Nominal : Tunnel Séquentiel à 9 Étapes)
+1. **Étape 1 : Bienvenue** – Le système affiche l'introduction pédagogique et valide les prérequis système.
+2. **Étape 2 : Profil & Mensurations (US-07)** – L'utilisateur saisit son sexe, son âge, sa taille, son poids initial et ses mensurations de référence (taille, hanches, poitrine, cuisses).
+3. **Étape 3 : Objectifs (US-08)** – L'utilisateur sélectionne son but principal (Perte de gras, Gain de muscle, Maintien).
+4. **Étape 4 : Télémétrie (US-11 / UC-05)** – L'utilisateur configure l'autorisation OAuth2 pour sa balance intelligente (Renpho/Withings), son podomètre (Apple HealthKit) et ses wearables.
+5. **Étape 5 : Habitudes (US-15 / UC-09)** – L'utilisateur sélectionne ses fenêtres de jeûne cibles (ex: 16:8) et ses objectifs de pas et de sommeil.
+6. **Étape 6 : Planificateur de Repas (US-12 / UC-06)** – L'utilisateur choisit son type de régime (ex: Hyperprotéiné), le nombre de personnes à table, ses aliments favoris et ses exclusions.
+7. **Étape 7 : Journal d'Entraînement (US-13 / UC-07)** – L'utilisateur sélectionne son split de musculation de référence (ex: Push/Pull/Legs).
+8. **Étape 8 : Planificateur de Calories (US-14 / UC-08)** – L'utilisateur valide sa formule métabolique de référence (Katch-McArdle) et confirme son niveau d'activité.
+9. **Étape 9 : Le Launchpad (Finalisation)** – L'utilisateur clique sur "Lancer mon profil". Le système exécute le traitement global en arrière-plan, configure l'agenda, compile le plan de repas, la liste de courses initiale, la routine de musculation et redirige l'utilisateur vers son tableau de bord principal.
+
+## 5. Flux Alternatifs (Exceptions et Validation d'État)
+- **A1 : Abandon en cours de route**
+  - Si l'utilisateur ferme l'application à l'étape 5, l'état d'avancement est sauvegardé en base de données. Lors de sa prochaine connexion, le système intercepte la session et le réoriente de force à l'étape 5. L'accès au tableau de bord principal reste verrouillé.
+- **A2 : Incohérence des Données de Diagnostic**
+  - Si à l'étape 8, les paramètres saisis génèrent un déficit impossible selon le seuil d'Alpert, le système bloque la transition vers l'étape 9 et invite l'utilisateur à ajuster ses variables ou à accepter l'échéance temporelle recalculée automatiquement.
+
+## 6. Postconditions
+- Le profil de l'utilisateur est marqué comme `IsOnboardingCompleted = true`.
+- Les bases de données temporelles d'habitudes, d'entraînements et de menus sont instanciées.
+---
 ## Matrice de Priorité des Cas d'Utilisation
 
 | ID | Nom du Cas d'Utilisation | Importance Métier | Complexité |
@@ -294,3 +329,4 @@ Permet à l'utilisateur de configurer, suivre et optimiser les trois piliers com
 | **UC-07** | Entraînement Personnalisées | 🔴 Critique | Basse |
 | **UC-08** | Planification des Calories | 🔴 Critique | Basse |
 | **UC-09** | Habitudes Métaboliques | 🔴 Critique | Basse |
+| **UC-10** | Parcours d'Onboarding Multi-Étapes et Diagnostic Métabolique | 🔴 Critique | Basse |
