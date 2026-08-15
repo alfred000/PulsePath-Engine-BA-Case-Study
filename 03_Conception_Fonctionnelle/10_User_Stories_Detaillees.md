@@ -307,3 +307,32 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
         *    **Given** une semaine de conformité parfaite à mes objectifs de jeûne et de pas.
         *    **When** j'accède à mes statistiques d'habitudes
         *    **Then** l'application doit afficher un indicateur de série (ex: "Série de 7 jours consécutifs") et griser les jours où l'un des trois piliers métaboliques n'a pas été validé.
+---
+
+## US-16 : Tunnel d'Onboarding Directif et Diagnostic Métabolique Initial
+**Priorité :** Should-have | **Estimation :** 5 SP
+
+*   **Énoncé :**  En tant que Nouvel utilisateur s'inscrivant sur PulsePath ,Je veux Suivre un parcours guidé étape par étape pour configurer mes mensurations, mes objectifs, mes synchronisations matérielles et mes préférences de vie, De sorte que L'application puisse exécuter un diagnostic métabolique global complet et automatiser l'intégralité de mes plannings initiaux avant mon entrée sur mon tableau de bord.
+*   **Critères d'Acceptation (CA) :**
+    *   **CA 1** : Architecture Angular Parent/Enfant et Persistance de l'État
+        *   **Given** que je commence le parcours d'onboarding.
+        *   **When** je passe d'une étape à une autre à l'aide des boutons "Suivant" et "Retour".
+        *   **Then** le composant Angular Parent (`OnboardingComponent`) doit valider l'état du formulaire du composant Enfant de l'étape en cours, sauvegarder les données localement et mettre à jour la barre de progression globale (11% par étape).
+    *   **CA 2** : Collecte Rigoureuse de la Ligne de Référence (Step 2)
+        *   **Given** l'étape de profil physique (`US-07`).
+        *   **When** je soumets mes mensurations.
+        *   **Then** le système doit m'imposer la saisie numérique en centimètres pour les quatre circonférences obligatoires (`waist`, `hips`, `chest`, `thigh`) pour sécuriser mon point de départ non-analytique avant de pouvoir cliquer sur "Suivant".     
+    *   **CA 3** : Orchestration et Cascade de Requêtes au Launchpad (Step 9)
+        *   **Given** que je me trouve à l'étape finale du Launchpad.
+        *   **When** je clique sur le bouton de validation finale "Générer mon Écosystème".
+        *   **Then** le backend .NET doit exécuter une procédure transactionnelle orchestrée qui :
+  1. Calcule mon TDEE et mes calories cibles finales (`US-14 / UC-08`).
+  2. Génère et distribue ma première semaine de menus (`US-12 / UC-06`).
+  3. Compile et structure ma première liste de courses catégorisée.
+  4. Injecte mon calendrier d'habitudes de jeûne et de pas (`US-15 / UC-09`).
+  5. Prépare les placeholder de surcharge progressive pour mes 5 jours de musculation (`US-13 / UC-07`).
+    *   **CA 4** : Redirection et Levée des Verrous d'Accès
+        *    **Given** le succès du traitement de l'étape 9.
+        *    **When** les requêtes d'initialisation reçoivent un code HTTP 200 du serveur .NET.
+        *    **Then** l'application doit modifier mon flag de sécurité utilisateur à `IsOnboardingCompleted = true` et me rediriger via le routeur Angular vers l'adresse `/dashboard`.
+
