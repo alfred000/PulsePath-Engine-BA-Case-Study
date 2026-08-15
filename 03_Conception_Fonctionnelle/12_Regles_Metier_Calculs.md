@@ -90,7 +90,7 @@ En fonction de la cible calorique calculée pour l'objectif S.M.A.R.T, les coeff
 
 ---
 
-## 11. RM-KPI-01 : Calcul du Progrès Linéaire (Objectif Perte/Sèche)
+## 11. Règle RM-KPI-01 : Calcul du Progrès Linéaire (Objectif Perte/Sèche)
 Cette règle permet d'évaluer le pourcentage de réalisation de l'objectif de l'utilisateur tout en protégeant le système contre les valeurs négatives ou aberrantes en cas de surplus.
 
 *   **Calcul de la Perte Totale (kg)** :  
@@ -110,12 +110,12 @@ Cette règle permet d'évaluer le pourcentage de réalisation de l'objectif de l
 
 ---
 
-## 12. RM-SRT-01 : Recommandation d'Activité de Soutien
+## 12. Règle RM-SRT-01 : Recommandation d'Activité de Soutien
 Si l'objectif est défini sur "perte" ou "seche", le système génère la directive d'accompagnement suivante dans le plan d'action de l'utilisateur : 
 *   *Apport cible = Budget_Calories. Option cardio obligatoire : Programmer un volume minimum de 8 000 pas quotidiens ou l'équivalent en cardio LISS pour forcer la dépense d'activité.*
 
 ---
-## 13. RM-COR-01 : Algorithme de Recherche d'Équilibre (Moteur de Rattrapage)
+## 13. Règle RM-COR-01 : Algorithme de Recherche d'Équilibre (Moteur de Rattrapage)
 Cet algorithme prescriptif sous contraintes s'active en cas de déviation pour ramener l'utilisateur vers sa trajectoire sur un horizon glissant de 7 jours.
 
 ### Étape A : Calcul de l'Écart Énergétique Global
@@ -138,7 +138,7 @@ Cet algorithme prescriptif sous contraintes s'active en cas de déviation pour r
 Le système utilise un modèle prédictif linéaire lié au poids de l'utilisateur (1 000 pas brûlent environ `Poids_Actuel * 0.5` kcal) :
 
 ---
-# 14. RM-STD-01 : Simulateur de Trajectoire de Composition Corporelle
+# 14. Règle RM-STD-01 : Simulateur de Trajectoire de Composition Corporelle
 
 Cet algorithme centralise les règles de gestion (RG), les formules mathématiques et les algorithmes de calcul appliqués par le moteur PulsePath Engine pour projeter l'évolution de la composition corporelle à partir des données d'une balance intelligente.
 
@@ -254,7 +254,7 @@ L'ajustement des macro-nutriments s'effectue sur la base des calories cibles con
 
 *   **Contrainte d'Épuisement (Hard Guardrail)** : Si `Nouvelle_Cible_Pas > 18000`, le système force la valeur à 18 000 pas et déclenche l'alerte de révision de l'échéance temporelle (`SF-ANP-03`).
 ---
-# 15. RM-PA-01 : Module de Planification Alimentaire
+# 15. Règle RM-PA-01 : Module de Planification Alimentaire
 
 Ce document spécifie les règles logiques d'agrégation, les tolérances de calcul algorithmique et les formules de mise à l'échelle des portions utilisées par le planificateur PulsePath Engine.
 
@@ -303,7 +303,7 @@ Selon le nombre de repas par jour choisi par l'utilisateur, l'enveloppe caloriqu
 | **4 Repas / jour** | $25\%$ du total kcal | $35\%$ du total kcal | $15\%$ du total kcal | $25\%$ du total kcal |
 | **5 Repas / jour** | $20\%$ du total kcal | $30\%$ du total kcal | $15\%$ du total kcal | $25\%$ du total kcal + (Collation 2 : $10\%$) |
 ---
-# 16. RM-APA-01 : Moteur d'Analyse de Performance Athlétique
+# 16. Règle RM-APA-01 : Moteur d'Analyse de Performance Athlétique
 
 Ce document formalise les algorithmes d'estimation de puissance, les calculs de répartition de fonte pour les barres, et les règles d'évaluation de la fatigue de la carte thermique musculaire.
 
@@ -359,7 +359,7 @@ Où les coefficients de stress valent :
 - $\text{FacteurDégradationHRV} = \text{Si la HRV du jour (UC002) est basse, multiplier l'IFA par 1.25 pour ralentir la récupération visuelle.}$$
 ---
 
-# 17. RM-MML-01 : Moteur Métabolique et Modélisation Linéaire
+# 17. Règle RM-MML-01 : Moteur Métabolique et Modélisation Linéaire
 
 Ce document formalise les équations de base du métabolisme, la constante de conversion de masse, et l'algorithme de projection itérative hebdomadaire calqué sur l'outil de référence.
 
@@ -437,7 +437,7 @@ Lorsque l'utilisateur choisit le ciblage par taux de masse grasse, les calculs d
 
 La simulation s'arrête automatiquement et valide l'échéance temporelle finale (Deadline) dès que $W_n \le W_{\text{cible}}$.
 ---
-# 18. RM-LC-01 : Logique Comportementale et Facteur d'Activité
+# 18. Règle RM-LC-01 : Logique Comportementale et Facteur d'Activité
 
 Ce document détaille les règles algorithmiques de calcul du NEAT, la notation de la régularité du sommeil et le fonctionnement du minuteur de jeûne en arrière-plan.
 
@@ -473,4 +473,8 @@ $$T_{\text{fin théorique}} = T_{\text{début}} + \left( \text{Heures du Protoco
 $$Temps_{\text{restant}} = T_{\text{fin théorique}} - T_{\text{actuel}}$$
 
 Si $Temps_{\text{restant}} \le 0$, l'état de l'interface bascule automatiquement sur `State : FeedingWindowOpen` et appelle le service de notification du backend .NET.
+----
+### Règle  RM-LE-01 : Règle de Transactionnalité de l'Étape de Lancement (Launchpad Engine)
+Lors de l'exécution de l'étape 9 (Launchpad), l'initialisation des plans (alimentaire, calorique, entraînement, habitudes) doit s'exécuter sous la forme d'un bloc transactionnel unique au niveau de la base de données de l'API .NET. Si la génération automatique du plan de repas (`UC003`) ou le calcul de trajectoire d'Alpert (`UC005`) échoue, l'intégralité de la transaction de profil de l'utilisateur est annulée (Rollback), le flag `IsOnboardingCompleted` reste à `false`, et l'utilisateur est maintenu à l'étape 9 avec l'affichage de l'erreur réseau pour éviter de corrompre l'intégrité de son compte de coaching.
+
 
