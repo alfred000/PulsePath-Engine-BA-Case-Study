@@ -285,3 +285,25 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
   - Mon poids cible de sécurité : $57\text{ kg} / 0,85 = 67,05\text{ kg}$.
   - Mon déficit optimal initial basé sur le plafond d'Alpert ($19\text{ kg de gras} \times 69,2 = 1314,8\text{ kcal}$).
   - La trajectoire non-linéaire, en ajustant à la baisse le déficit calorique chaque semaine à mesure que ma masse grasse diminue, afin de m'indiquer la durée totale de simulation minimale requise pour atteindre 15% sans perdre un seul gramme de muscle.
+---
+## US-15 : Module de Suivi des Habitudes Spécifiques à la Perte de Gras
+**Priorité :** Should-have | **Estimation :** 5 SP
+
+*   **Énoncé :**  En tant que Pratiquant de musculation en période de restriction calorique avancée ,Je veux Suivre activement mes pas quotidiens, monitorer la structure de mon sommeil et piloter mes protocoles de jeûne intermittent à l'aide d'un minuteur en temps réel, De sorte que Je puisse maximiser ma dépense énergétique journalière (NEAT), réguler mes hormones de stress (cortisol/ghréline) et contrôler mes fenêtres de prise alimentaire.
+*   **Critères d'Acceptation (CA) :**
+    *   **CA 1** : Visualisation de l'Activité Terrestre (NEAT Rings)
+        *   **Given** que je consulte mon tableau de bord Angular.
+        *   **When** mes pas augmentent tout au long de la journée.
+        *   **Then** l'interface doit afficher des anneaux de progression circulaires dynamiques se remplissant jusqu'à l'atteinte de ma cible (ex: 10 000 pas/jour) et déclencher des alertes de mouvement si mon inactivité dépasse 50 minutes.
+    *   **CA 2** : Analyse de la Qualité et Régularité du Sommeil
+        *   **Given** les données de sommeil extraites par le hub de télémétrie.
+        *   **When** le système traite ma nuit.
+        *   **Then** il doit valider l'atteinte de la cible (7 à 9 heures) et vérifier la variance des heures de coucher et de lever afin de me fournir un indicateur de cohérence et des insights sur le sommeil profond.     
+    *   **CA 3** : Minuteur en Temps Réel et Alertes de Jeûne Intermittent
+        *   **Given** un protocole de jeûne sélectionné de type 16:8.
+        *   **When** je clique sur "Démarrer le Jeûne".
+        *   **Then** l'écran doit afficher un compte à rebours en temps réel décrémentant les secondes restantes et m'envoyer une notification push d'avertissement 15 minutes avant l'ouverture de ma fenêtre de repas.
+    *   **CA 4** : Compteurs de Série (Streak Counter) et Historique
+        *    **Given** une semaine de conformité parfaite à mes objectifs de jeûne et de pas.
+        *    **When** j'accède à mes statistiques d'habitudes
+        *    **Then** l'application doit afficher un indicateur de série (ex: "Série de 7 jours consécutifs") et griser les jours où l'un des trois piliers métaboliques n'a pas été validé.
