@@ -249,6 +249,38 @@ Permet à l'utilisateur de configurer un plan d'apport calorique précis en choi
 - L'utilisateur peut copier une URL de partage contenant tous les paramètres d'état (Query Strings) ou sauvegarder le plan localement.
 
 ---
+# UC-09 : Suivi des Habitudes Métaboliques (Activité, Sommeil, Jeûne)
+
+## 1. Description
+Permet à l'utilisateur de configurer, suivre et optimiser les trois piliers comportementaux du déficit calorique : la thermogenèse liée à l'activité non physique (NEAT via les pas), l'équilibre hormonal de récupération (sommeil) et la gestion temporelle de la faim (jeûne intermittent). Le système fournit des alertes contextuelles et des indicateurs de régularité pour ancrer ces habitudes.
+
+## 2. Acteurs
+- **Acteur Principal :** Utilisateur Authentifié (Athlète)
+- **Acteurs Secondaires (Systèmes) :** 
+  - Module de Télémétrie Mobile (HealthKit/Google Fit pour les pas et le sommeil)
+  - Moteur de Notifications Push de l'application
+
+## 3. Préconditions
+- L'utilisateur a activé les autorisations de notifications et la synchronisation en arrière-plan du Hub de Télémétrie (`UC002`).
+
+## 4. Flux Principal (Scénario Nominal)
+1. **Suivi de l'Activité (Pas) :** Le système met à jour en continu les anneaux de progression de l'interface Angular en fonction des pas synchronisés. Si l'utilisateur passe 50 minutes consécutives assis sans bouger, le système envoie une notification de rappel de mouvement horaire.
+2. **Suivi du Sommeil :** Chaque matin, le système extrait l'heure de coucher, l'heure de lever et la répartition des phases (sommeil profond/paradoxal). Il calcule un score de régularité et ajuste l'analyse de fatigue du système nerveux central (SNC).
+3. **Gestion du Jeûne :** L'utilisateur sélectionne son protocole de jeûne (ex: 16:8, 18:6 ou OMAD).
+4. L'utilisateur clique sur "Démarrer le Jeûne" depuis son tableau de bord.
+5. Le système initialise un compte à rebours visuel dynamique en temps réel calculant les heures et minutes restantes avant la prochaine fenêtre d'alimentation.
+6. À l'expiration de la fenêtre de jeûne, le système envoie une notification push de fin de jeûne, puis passe en mode calcul de la fenêtre d'alimentation.
+7. Le système incrémente le compteur de séries (Streaks) si l'objectif est atteint avec succès.
+
+## 5. Flux Alternatifs (Exceptions et Corrections)
+- **A1 : Saisie Manuelle des Plages Horaires**
+  - Si la montre connectée n'a pas enregistré le sommeil ou si l'utilisateur a oublié de déclencher le minuteur de jeûne à l'heure exacte.
+  - L'utilisateur peut modifier les heures de début et de fin a posteriori via l'interface de gestion historique. Le système recalcule la validité de la journée.
+
+## 6. Postconditions
+- Les volumes d'activité (NEAT), les heures de sommeil et l'historique des fenêtres de jeûne sont stockés dans la base de données temporelle.
+- Les données de NEAT (pas) mettent à jour de manière dynamique le calcul du TDEE quotidien utilisé par le planificateur de calories (`UC005`).
+---
 ## Matrice de Priorité des Cas d'Utilisation
 
 | ID | Nom du Cas d'Utilisation | Importance Métier | Complexité |
