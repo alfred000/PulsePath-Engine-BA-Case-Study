@@ -436,3 +436,41 @@ Lorsque l'utilisateur choisit le ciblage par taux de masse grasse, les calculs d
    $$\text{Perte de poids pour la semaine } n = \frac{\text{Déficit Autorisé Quotidien}_n \times 7 \text{ jours}}{9440 \text{ kcal/kg}}$$
 
 La simulation s'arrête automatiquement et valide l'échéance temporelle finale (Deadline) dès que $W_n \le W_{\text{cible}}$.
+---
+# 18. RM-LC-01 : Logique Comportementale et Facteur d'Activité
+
+Ce document détaille les règles algorithmiques de calcul du NEAT, la notation de la régularité du sommeil et le fonctionnement du minuteur de jeûne en arrière-plan.
+
+## I. Règles de Gestion (Business Rules)
+
+### RG013 : Calcul du Taux de Complétion Journalier des Habitudes
+Pour qu'une journée soit marquée comme "Validée" dans le calendrier des habitudes de perte de gras, les conditions minimales suivantes doivent être réunies simultanément :
+- $\text{Pas Quotidiens} \ge \text{Cible Choisie (ex: 8000)}$
+- $\text{Durée Sommeil} \ge 7 \text{ heures}$
+- $\text{Durée du Jeûne Actualisé} \ge \text{Durée Protocole (ex: 16 heures)} - 15 \text{ min (Marge de tolérance)}$
+
+### RG014 : Règle d'Inactivité Horaire (Sedentary Alert)
+L'algorithme de détection de la sédentarité analyse les pas heure par heure entre 08h00 et 20h00. Si le différentiel de pas d'une heure donnée est inférieur à 250 pas à la 50ème minute de l'heure en cours, le système génère un signal d'alerte de mouvement.
+
+## II. Formules Mathématiques et Analyse Quantitative
+
+### 1. Modélisation de l'Indice d'Efficacité du Sommeil ($IES$)
+Le score de sommeil affiché sur l'interface Angular (sur une échelle de 100) intègre la durée totale ($D$), la proportion de sommeil profond ($SP$) et la régularité horaire ($R$) :
+
+$$IES = \left( \text{FacteurDurée} \times 0,5 \right) + \left( \frac{SP}{\text{Sommeil Total}} \times 100 \times 0,3 \right) + \left( R \times 0,2 \right)$$
+
+Où :
+- $\text{FacteurDurée} = 100$ si $7 \le D \le 9 \text{ heures}$. Si $D < 7$, $\text{FacteurDurée} = (D / 7) \times 100$.
+- $R$ est un score de 0 à 100 inversement proportionnel à la variance en minutes de l'heure de coucher par rapport à la moyenne des 7 derniers jours.
+
+### 2. Algorithme du Minuteur de Jeûne en Arrière-plan
+Pour éviter de vider la batterie du téléphone de l'utilisateur, le compte à rebours de l'interface Angular ne doit pas dépendre d'un processus d'exécution continue en tâche de fond. Le système s'appuie sur des calculs d'horodatages absolus de type Unix (Unix Timestamps) :
+
+Lors du clic sur "Démarrer le Jeûne" à l'instant $T_{\text{début}}$ :
+$$T_{\text{fin théorique}} = T_{\text{début}} + \left( \text{Heures du Protocole} \times 3600 \right)$$
+
+À chaque cycle de rafraîchissement de l'interface graphique du Frontend Angular ($T_{\text{actuel}}$), le temps restant affiché ($Temps_{\text{restant}}$ en secondes) vaut :
+$$Temps_{\text{restant}} = T_{\text{fin théorique}} - T_{\text{actuel}}$$
+
+Si $Temps_{\text{restant}} \le 0$, l'état de l'interface bascule automatiquement sur `State : FeedingWindowOpen` et appelle le service de notification du backend .NET.
+
