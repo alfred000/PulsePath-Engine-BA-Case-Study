@@ -322,7 +322,7 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
         *   **Given** l'étape de profil physique (`US-07`).
         *   **When** je soumets mes mensurations.
         *   **Then** le système doit m'imposer la saisie numérique en centimètres pour les quatre circonférences obligatoires (`waist`, `hips`, `chest`, `thigh`) pour sécuriser mon point de départ non-analytique avant de pouvoir cliquer sur "Suivant".     
-    *   **CA 3** : Orchestration et Cascade de Requêtes au Launchpad (Step 9)
+     *  **CA 3** : Orchestration et Cascade de Requêtes au Launchpad (Step 9)
         *   **Given** que je me trouve à l'étape finale du Launchpad.
         *   **When** je clique sur le bouton de validation finale "Générer mon Écosystème".
         *   **Then** le backend .NET doit exécuter une procédure transactionnelle orchestrée qui :
@@ -331,7 +331,7 @@ Ce document détaille les spécifications fonctionnelles sous forme de **User St
   3. Compile et structure ma première liste de courses catégorisée.
   4. Injecte mon calendrier d'habitudes de jeûne et de pas (`US-15 / UC-09`).
   5. Prépare les placeholder de surcharge progressive pour mes 5 jours de musculation (`US-13 / UC-07`).
-    *   **CA 4** : Redirection et Levée des Verrous d'Accès
+     *  **CA 4** : Redirection et Levée des Verrous d'Accès
         *    **Given** le succès du traitement de l'étape 9.
         *    **When** les requêtes d'initialisation reçoivent un code HTTP 200 du serveur .NET.
         *    **Then** l'application doit modifier mon flag de sécurité utilisateur à `IsOnboardingCompleted = true` et me rediriger via le routeur Angular vers l'adresse `/dashboard`.
