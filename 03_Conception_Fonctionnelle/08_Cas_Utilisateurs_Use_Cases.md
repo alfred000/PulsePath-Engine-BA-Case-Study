@@ -293,3 +293,4 @@ Permet à l'utilisateur de configurer, suivre et optimiser les trois piliers com
 | **UC-06** | Menus Nutritionnels | 🔴 Critique | Basse |
 | **UC-07** | Entraînement Personnalisées | 🔴 Critique | Basse |
 | **UC-08** | Planification des Calories | 🔴 Critique | Basse |
+| **UC-09** | Habitudes Métaboliques | 🔴 Critique | Basse |
